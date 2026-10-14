@@ -49,7 +49,7 @@
     app.innerHTML =
       '<section class="hero"><h1>' + heroTitle() + "</h1><p>" + esc(SITE.tagline || "") + "</p></section>" +
       '<div class="tools">' + chips + '<input class="search" type="search" placeholder="Поиск…" value="' + esc(state.q) + '"></div>' +
-      '<div class="grid" id="grid"></div>';
+      '<div id="grid"></div>';
 
     app.querySelectorAll(".chip").forEach(function (b) {
       b.onclick = function () { state.type = b.dataset.type; renderHome(); };
@@ -72,19 +72,31 @@
       return [it.name, it.short, (it.tags || []).join(" ")].join(" ").toLowerCase().indexOf(q) >= 0;
     });
     var g = document.getElementById("grid");
-    if (!list.length) { g.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
-    g.innerHTML = list.map(function (it) {
-      return '<a class="card" href="#/item/' + encodeURIComponent(it.id) + '">' +
-        '<div class="card-head">' + icon(it) + "<div><h3>" + esc(it.name) + "</h3>" + badge(it.type) + "</div></div>" +
-        "<p>" + esc(it.short) + "</p>" +
-        '<div class="meta">' +
-          (it.version ? "<span>v" + esc(it.version) + "</span>" : "") +
-          (it.date ? "<span>" + date(it.date) + "</span>" : "") +
-          (it.size ? "<span>" + esc(it.size) + "</span>" : "") +
-        "</div></a>";
-    }).join("");
+    if (!list.length) { g.innerHTML = '<div class="grid"><div class="empty">Ничего не найдено</div></div>'; return; }
+    if (state.type !== "all") { g.innerHTML = '<div class="grid">' + list.map(card).join("") + "</div>"; return; }
+    // «Всё» — блоками по группам, в порядке TYPES
+    var html = "";
+    var types = Object.keys(TYPES);
+    list.forEach(function (it) { if (types.indexOf(it.type) < 0) types.push(it.type); });
+    types.forEach(function (t) {
+      var part = list.filter(function (it) { return it.type === t; });
+      if (!part.length) return;
+      html += '<section class="group"><h2 class="group-title">' + esc(TYPES[t] || t) + "<span>" + part.length + "</span></h2>" +
+        '<div class="grid">' + part.map(card).join("") + "</div></section>";
+    });
+    g.innerHTML = html;
   }
 
+  function card(it) {
+    return '<a class="card" href="#/item/' + encodeURIComponent(it.id) + '">' +
+      '<div class="card-head">' + icon(it) + "<div><h3>" + esc(it.name) + "</h3>" + badge(it.type) + "</div></div>" +
+      "<p>" + esc(it.short) + "</p>" +
+      '<div class="meta">' +
+        (it.version ? "<span>v" + esc(it.version) + "</span>" : "") +
+        (it.date ? "<span>" + date(it.date) + "</span>" : "") +
+        (it.size ? "<span>" + esc(it.size) + "</span>" : "") +
+      "</div></a>";
+  }
   // ── страница публикации ──
   function renderItem(id) {
     var it = ITEMS.filter(function (x) { return x.id === id; })[0];

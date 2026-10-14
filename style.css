@@ -102,6 +102,11 @@ img { max-width: 100%; display: block; }
 .badge.admin { background: rgba(40, 200, 220, .14); color: #4fd1e0; }
 .badge.android { background: rgba(61, 220, 132, .14); color: #3ddc84; }
 .badge.other { background: rgba(176, 124, 255, .14); color: var(--accent2); }
+.group { margin-bottom: 34px; }
+.group .grid { padding-bottom: 0; }
+.group-title { font-size: 20px; margin: 0 0 14px; display: flex; align-items: center; gap: 10px; }
+.group-title span { font-size: 13px; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 1px 9px; }
+#grid { padding-bottom: 40px; }
 .empty { color: var(--muted); padding: 40px 0; grid-column: 1 / -1; text-align: center; }
 
 /* ── страница публикации ── */

@@ -99,6 +99,7 @@ img { max-width: 100%; display: block; }
 .badge.system { background: rgba(79, 157, 255, .14); color: var(--accent); }
 .badge.games { background: rgba(63, 208, 122, .14); color: var(--good); }
 .badge.media { background: rgba(255, 107, 154, .14); color: #ff6b9a; }
+.badge.social { background: rgba(79, 157, 255, .14); color: #7fb6ff; }
 .badge.admin { background: rgba(40, 200, 220, .14); color: #4fd1e0; }
 .badge.android { background: rgba(61, 220, 132, .14); color: #3ddc84; }
 .badge.other { background: rgba(176, 124, 255, .14); color: var(--accent2); }
@@ -127,6 +128,9 @@ img { max-width: 100%; display: block; }
   padding: 14px; border-radius: 11px; border: 0; cursor: pointer;
 }
 .btn:hover { text-decoration: none; filter: brightness(1.1); }
+.dl-list { display: grid; gap: 10px; }
+.btn.btn2 { background: var(--card2); color: var(--text); font-size: 15px; padding: 12px; }
+.btn small { font-weight: 400; opacity: .75; }
 .dl dl { margin: 16px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px; }
 .dl dt { color: var(--muted); }
 .dl dd { margin: 0; text-align: right; }

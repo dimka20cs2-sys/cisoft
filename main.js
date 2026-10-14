@@ -143,7 +143,7 @@
     }
 
     html += '</div><aside class="side"><div class="dl">' +
-      '<a class="btn" href="' + esc(href) + '"' + dlAttr + ">⬇ Скачать" + (it.size ? " · " + esc(it.size) : "") + "</a><dl>" +
+      dlButtons(it, href, dlAttr) + "<dl>" +
       (it.version ? "<dt>Версия</dt><dd>" + esc(it.version) + "</dd>" : "") +
       (it.date ? "<dt>Обновлено</dt><dd>" + date(it.date) + "</dd>" : "") +
       (it.size ? "<dt>Размер</dt><dd>" + esc(it.size) + "</dd>" : "") +
@@ -168,6 +168,18 @@
     });
     var main = document.getElementById("shot-main");
     if (main) main.onclick = function () { openLightbox(shots[cur].src); };
+  }
+
+  // одна кнопка «Скачать» или несколько (it.downloads: [{label, file|link, size}])
+  function dlButtons(it, href, dlAttr) {
+    if (!it.downloads || !it.downloads.length)
+      return '<a class="btn" href="' + esc(href) + '"' + dlAttr + ">⬇ Скачать" + (it.size ? " · " + esc(it.size) : "") + "</a>";
+    return '<div class="dl-list">' + it.downloads.map(function (d, i) {
+      var h = d.file || d.link || "#";
+      var attr = d.file ? " download" : ' target="_blank" rel="noopener"';
+      return '<a class="btn' + (i ? " btn2" : "") + '" href="' + esc(h) + '"' + attr + ">" + esc(d.label) +
+        (d.size ? '<small> · ' + esc(d.size) + "</small>" : "") + "</a>";
+    }).join("") + "</div>";
   }
 
   function openLightbox(src) {

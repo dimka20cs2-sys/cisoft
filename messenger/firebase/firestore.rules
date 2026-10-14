@@ -228,7 +228,8 @@ service cloud.firestore {
     match /userdata/{userId} {
       function validUserdata() {
         let d = request.resource.data;
-        return d.keys().hasOnly(['favorites', 'downloads', 'lastAccountVisit'])
+        return d.keys().hasOnly(['favorites', 'downloads', 'lastAccountVisit', 'purchases'])
+          && (!('purchases' in d) || (d.purchases is map && d.purchases.size() <= 20))
           && (!('favorites' in d) || (d.favorites is map && d.favorites.size() <= 200))
           && (!('downloads' in d) || (d.downloads is list && d.downloads.size() <= 50))
           && (!('lastAccountVisit' in d) || d.lastAccountVisit is number);

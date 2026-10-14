@@ -1,6 +1,6 @@
 // #/account — «Личный кабинет»: каркас страницы, профиль, обновление блоков при изменениях.
 import { acc, avatarHtml, signedIn, isAdmin, joinedMs, errText } from './acc-core.js';
-import { favoritesHtml, downloadsHtml, likesHtml, messengerHtml, fmtDay } from './acc-lists.js';
+import { favoritesHtml, downloadsHtml, likesHtml, messengerHtml, purchasesHtml, fmtDay } from './acc-lists.js';
 import { adminHtml, bindAdmin } from './acc-admin.js';
 import { securityHtml, bindSecurity, openDeleteDialog } from './acc-security.js';
 
@@ -50,6 +50,7 @@ function profileViewHtml() {
 
 function fullHtml() {
   return HEAD + '<div class="acc-layout"><div class="acc-main">' +
+      '<section class="acc-card" id="acc-buy"></section>' +
       '<section class="acc-card" id="acc-fav"></section>' +
       '<section class="acc-card" id="acc-dl"></section>' +
       '<section class="acc-card" id="acc-likes"></section>' +
@@ -81,6 +82,7 @@ function maybeVisit() {
 function fillSections() {
   maybeVisit();
   put('acc-prof-view', profileViewHtml());
+  put('acc-buy', purchasesHtml());
   put('acc-fav', favoritesHtml(prevVisit));
   put('acc-dl', downloadsHtml());
   put('acc-likes', likesHtml());
@@ -131,6 +133,7 @@ CI.app.addEventListener('click', (e) => {
   else if (a === 'remove-photo') acc.removeAvatar().then(() => CI.toast('Фото убрано'), (ex) => CI.toast(errText(ex)));
   else if (a === 'open-msgr') CI.msgr.open();
   else if (a === 'clear-dl') acc.clearDownloads();
+  else if (a === 'copy-key') navigator.clipboard.writeText(t.dataset.key).then(() => CI.toast('Ключ скопирован'), () => CI.toast('Не удалось скопировать'));
   else if (a === 'delete-acc') openDeleteDialog();
 });
 

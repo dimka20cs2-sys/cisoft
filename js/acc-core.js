@@ -9,7 +9,7 @@ import { colorFor, initials, isDataImage, toMs } from '../messenger/js/util.js';
 const CI = window.CI;
 const esc = CI.esc;
 const listeners = new Set();
-const EMPTY = () => ({ favorites: {}, downloads: [], lastAccountVisit: 0 });
+const EMPTY = () => ({ favorites: {}, downloads: [], lastAccountVisit: 0, purchases: {} });
 
 export const acc = CI.acc = Object.assign(CI.acc || {}, {
   ready: false,        // известно, вошёл ли пользователь (и загружен ли профиль)

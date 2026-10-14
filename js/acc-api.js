@@ -76,6 +76,14 @@ function recordDownload(id, label) {
   setDoc(udRef(), { downloads: list }, { merge: true }).catch(() => {});
 }
 
+// Покупка Pro: ключ сохраняется в аккаунте, чтобы его не потерять
+function savePurchase(p) {
+  if (!signedIn() || !ID_RE.test(p.product)) return Promise.resolve();
+  const rec = { key: String(p.license), order: String(p.order), email: String(p.email || ''), at: Date.now() };
+  acc.data.purchases = Object.assign({}, acc.data.purchases, { [p.product]: rec });
+  return setDoc(udRef(), { purchases: { [p.product]: rec } }, { merge: true }).catch(() => {});
+}
+
 function clearDownloads() {
   if (!signedIn()) return;
   acc.data.downloads = [];
@@ -160,6 +168,6 @@ async function deleteAccount(pass) {
 
 Object.assign(acc, {
   signIn, register, completeProfile, resetPassword, logout,
-  toggleFav, recordDownload, clearDownloads, markVisit, toggleLike,
+  toggleFav, recordDownload, clearDownloads, markVisit, toggleLike, savePurchase,
   saveName, setAvatarFile, removeAvatar, changePassword, deleteAccount
 });

@@ -190,3 +190,33 @@ button { font: inherit; color: inherit; }
 footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; padding: 24px 20px; }
 footer .right { margin-left: auto; }
+/* ── магазин Pro ── */
+.pro-badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .5px; color: #fff; padding: 2px 8px; border-radius: 99px; background: linear-gradient(135deg, #ffb547, #ff6b9a); vertical-align: middle; margin-left: 6px; }
+.shop { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.shop::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, #ffb547, #ff6b9a, #b07cff); }
+.shop-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.shop-head .pro-badge { margin: 0; }
+.shop-price { font-size: 28px; font-weight: 800; }
+.shop-head small { color: var(--muted); }
+.shop-perks { margin: 0 0 14px; padding-left: 18px; font-size: 14px; }
+.shop-perks li { margin: 3px 0; }
+.shop-buttons { min-height: 48px; }
+.shop-wait, .shop-test { color: var(--muted); font-size: 13px; padding: 10px 0; }
+.shop-test { color: var(--warn); padding: 0 0 8px; }
+.shop-note { color: var(--muted); font-size: 12.5px; margin: 10px 0 0; }
+.shop-recover { margin-top: 10px; font-size: 13px; }
+.shop-recover summary { cursor: pointer; color: var(--accent); }
+.shop-recover form { display: grid; gap: 8px; margin-top: 10px; }
+.shop-recover input { background: var(--bg2); border: 1px solid var(--line); color: var(--text); padding: 9px 12px; border-radius: 9px; font: inherit; }
+.shop-modal { position: fixed; inset: 0; z-index: 80; background: rgba(5, 6, 9, .75); display: grid; place-items: center; padding: 20px; }
+.shop-dialog { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; max-width: 520px; width: 100%; box-shadow: 0 20px 60px #0008; }
+.shop-dialog h2 { margin: 0 0 8px; }
+.shop-dialog textarea { width: 100%; background: var(--bg2); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px; font: 13px Consolas, monospace; resize: none; word-break: break-all; }
+.shop-dialog label { display: block; color: var(--muted); font-size: 13px; margin: 12px 0 6px; }
+.shop-row { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+.shop-row .btn { width: auto; flex: 1; }
+.shop-dialog ol { padding-left: 20px; margin: 8px 0; }
+.shop-close { position: absolute; top: 10px; right: 14px; background: none; border: 0; color: var(--muted); font-size: 26px; cursor: pointer; }
+.acc-key { display: block; font-size: 11px; color: var(--muted); word-break: break-all; margin-top: 4px; max-height: 2.6em; overflow: hidden; }
+.card .pro-price { margin-left: auto; font-weight: 700; color: #ffb547; }
+.badge.pro { background: rgba(255, 159, 67, .16); color: #ffb547; }

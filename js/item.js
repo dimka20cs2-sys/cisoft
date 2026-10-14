@@ -12,7 +12,7 @@
     var html =
       '<a class="back" href="#/">← Каталог</a>' +
       '<div class="item-head">' + CI.icon(it, true) +
-        "<div>" + CI.badge(it.type) + (CI.isNew(it) ? '<span class="new-tag">Новое</span>' : "") +
+        "<div>" + CI.badge(it.type) + (it.product ? '<span class="pro-badge">PRO</span>' : '') + (CI.isNew(it) ? '<span class="new-tag">Новое</span>' : "") +
         "<h1>" + esc(it.name) + "</h1><p>" + esc(it.short) + "</p></div></div>" +
       '<div class="layout"><div>';
 
@@ -44,7 +44,7 @@
       }).join("") + "</div>";
     }
 
-    html += '</div><aside class="side"><div class="dl">' + dlButtons(it) +
+    html += '</div><aside class="side">' + (CI.shopBlock ? CI.shopBlock(it) : '') + '<div class="dl">' + dlButtons(it) +
       '<div class="item-actions">' +
         '<span class="stat dl-count" title="Скачиваний">⬇ <span data-count-dl="' + eid + '">0</span></span>' +
         '<button type="button" class="like" data-like="' + eid + '" aria-pressed="false" title="Нравится">' +
@@ -68,6 +68,7 @@
     }
     html += "</div></aside></div>";
     app.innerHTML = html;
+    if (CI.shopMount) CI.shopMount(it);
 
     var cur = 0;
     app.querySelectorAll(".thumbs button").forEach(function (b) {
@@ -90,7 +91,8 @@
   function dlButtons(it) {
     if (!it.downloads || !it.downloads.length) {
       var href = it.file || it.link || "#";
-      return '<a class="btn" href="' + esc(href) + '"' + linkAttr(it.file) + ' data-dl="' + esc(it.id) + '" data-dl-label="Скачать">⬇ Скачать' +
+      var lbl = it.product ? 'Скачать бесплатную версию' : 'Скачать';
+      return '<a class="btn' + (it.product ? ' btn2' : '') + '" href="' + esc(href) + '"' + linkAttr(it.file) + ' data-dl="' + esc(it.id) + '" data-dl-label="' + lbl + '">⬇ ' + lbl +
         (it.size ? " · " + esc(it.size) : "") + "</a>";
     }
     var list = it.downloads.slice(), rec = CI.recommendIndex(list);

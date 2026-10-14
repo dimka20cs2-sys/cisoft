@@ -27,6 +27,23 @@ function rowIcon(it) {
 }
 function empty(text) { return '<div class="acc-empty">' + text + '</div>'; }
 
+export function purchasesHtml() {
+  const map = acc.data.purchases || {};
+  const ids = Object.keys(map).sort((a, b) => (map[b].at || 0) - (map[a].at || 0));
+  let rows = '';
+  for (const id of ids) {
+    const it = CI.byId(id), p = map[id];
+    if (!it || !p) continue;
+    rows += '<li class="acc-row">' + rowIcon(it) +
+      '<div class="acc-row-main"><div class="acc-row-top">' + itemLink(it) + '<span class="pro-badge">PRO</span></div>' +
+      '<small>Заказ ' + esc(p.order) + ' · ' + fmtDay(Number(p.at)) + '</small>' +
+      '<code class="acc-key">' + esc(p.key) + '</code></div>' +
+      '<button type="button" class="acc-link" data-act="copy-key" data-key="' + esc(p.key) + '">Скопировать ключ</button></li>';
+  }
+  return head('Мои покупки', ids.length) +
+    (rows ? '<ul class="acc-list">' + rows + '</ul>' : empty('Здесь появятся лицензии Pro-программ, купленных в этом аккаунте.'));
+}
+
 // prevVisit — момент прошлого визита в кабинет (для пометки «новое»)
 export function favoritesHtml(prevVisit) {
   const favs = acc.data.favorites || {};

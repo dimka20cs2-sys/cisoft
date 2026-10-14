@@ -99,7 +99,7 @@
     return '<article class="card">' +
       '<div class="card-head">' + CI.icon(it) + "<div>" +
         '<h3><a class="card-link" href="#/item/' + encodeURIComponent(it.id) + '">' + esc(it.name) + "</a></h3>" +
-        CI.badge(it.type) + (CI.isNew(it) ? '<span class="new-tag">Новое</span>' : "") +
+        CI.badge(it.type) + (it.product ? '<span class="pro-badge">PRO · $' + esc(it.price) + '</span>' : '') + (CI.isNew(it) ? '<span class="new-tag">Новое</span>' : "") +
       "</div></div>" +
       "<p>" + esc(it.short) + "</p>" +
       '<div class="meta">' +

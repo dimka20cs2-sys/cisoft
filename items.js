@@ -6,9 +6,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 window.SITE = {
-  name: "DM Soft",
+  name: "CISOFT",
   tagline: "Бесплатные программы, сборки и конфиги для Windows и Minecraft",
-  author: "DM Soft",
+  author: "CISOFT",
   // contact: "https://t.me/твой_канал",   ← раскомментируй и впиши, появится в шапке и подвале
 };
 

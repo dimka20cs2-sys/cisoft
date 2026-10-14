@@ -29,8 +29,8 @@
   пути C:\Users\<имя>, IP/MAC-адресов, переписок.
 
 САЙТ В ИНТЕРНЕТЕ
-  Адрес: https://dimka20cs2-sys.github.io/dm-soft/
-  Репозиторий: https://github.com/dimka20cs2-sys/dm-soft
+  Адрес: https://cisoft.vercel.app
+  Репозиторий: https://github.com/dimka20cs2-sys/cisoft
 
   Обновить сайт после любых изменений: запусти publish.bat (двойной клик).
   Через 1–2 минуты изменения появятся по адресу выше.

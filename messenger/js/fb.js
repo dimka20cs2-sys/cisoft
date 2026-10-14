@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
-import { getAuth, connectAuthEmulator } from './fa.js';
+import { initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, connectAuthEmulator } from './fa.js';
 import { initializeFirestore, connectFirestoreEmulator } from './fs.js';
 import { firebaseConfig, useEmulators, emulatorProjectId, emulatorHosts } from '../config.js';
 
@@ -10,7 +10,8 @@ const cfg = useEmulators
 export const configMissing = !useEmulators && String(firebaseConfig.apiKey || '').startsWith('ВСТАВЬТЕ');
 
 export const app = initializeApp(cfg);
-export const auth = getAuth(app);
+// без popupRedirectResolver: вход только по почте, лишний скрипт apis.google.com не грузится (важно для WebView и CSP)
+export const auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] });
 export const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
 
 if (useEmulators) {

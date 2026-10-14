@@ -8,8 +8,18 @@ const crypto = require("crypto");
 
 // Цены задаёт только сервер — то, что пришло со страницы, не учитывается.
 const PRODUCTS = {
-  "duplicate-finder": { name: "Duplicate Finder Pro", price: "7.99" },
-  "uptime-monitor": { name: "Uptime Monitor Pro", price: "9.99" },
+  "video-editor": { name: "Video Editor Pro", price: "3.99" },
+  "duplicate-finder": { name: "Duplicate Finder Pro", price: "3.99" },
+  "uptime-monitor": { name: "Uptime Monitor Pro", price: "4.99" },
+  "pc-inventory": { name: "PC Inventory Pro", price: "2.99" },
+  "net-scanner": { name: "Net Scanner Pro", price: "2.99" },
+  "mc-backup": { name: "MC Backup Pro", price: "1.99" },
+  "port-monitor": { name: "Port Monitor Pro", price: "1.99" },
+  "service-manager": { name: "Service Manager Pro", price: "1.99" },
+  "log-analyzer": { name: "Log Analyzer Pro", price: "1.99" },
+  "phone-info": { name: "Phone Info Pro", price: "0.99" },
+  "net-tools": { name: "Net Tools Pro", price: "0.99" },
+  "mc-server-status": { name: "MC Server Status Pro", price: "0.99" },
 };
 const CURRENCY = "USD";
 

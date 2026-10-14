@@ -89,7 +89,7 @@
       '<label>Ваш ключ:</label><textarea readonly rows="4">' + esc(res.license) + "</textarea>" +
       '<div class="shop-row"><button class="btn" data-copy>Скопировать ключ</button>' +
       (it && it.file ? '<a class="btn btn2" href="' + esc(it.file) + '" download>Скачать программу</a>' : "") + "</div>" +
-      "<ol><li>Установите и откройте программу.</li><li>Нажмите «Ввести ключ» и вставьте ключ.</li><li>Готово — Pro открыт навсегда.</li></ol>" +
+      "<ol><li>Установите и откройте программу.</li><li>Нажмите «Ввести ключ» (в Android-приложении — значок FREE в шапке) и вставьте ключ.</li><li>Готово — Pro открыт навсегда.</li></ol>" +
       '<p class="shop-note">Заказ ' + esc(res.order) + ". Ключ можно восстановить по номеру заказа и email" +
       (CI.acc && CI.acc.user ? ", а ещё он сохранён в «Личном кабинете»." : ".") + "</p>" +
       '<button class="shop-close" aria-label="Закрыть">×</button></div>';

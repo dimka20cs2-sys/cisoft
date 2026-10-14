@@ -76,7 +76,7 @@
   }
 
   // ── непрочитанные и уведомления из iframe ──
-  var lastCount = -1, lastNotifyAt = 0;
+  var lastCount = -1, lastNotifyAt = 0, unreadFns = [];
   function visible() { return isPage || isOpen; }
   function setBadges(n) {
     var txt = n > 99 ? "99+" : String(n);
@@ -102,6 +102,7 @@
       var grew = lastCount >= 0 && n > lastCount;
       lastCount = n;
       setBadges(n);
+      unreadFns.forEach(function (fn) { try { fn(n); } catch (er) {} });
       // в iframe «notify» приходит только при скрытой вкладке — поэтому показываем общий тост сами
       if (grew) setTimeout(function () { if (Date.now() - lastNotifyAt > 1500) showToast("Новое сообщение в мессенджере"); }, 400);
     } else if (d.type === "notify") {
@@ -116,6 +117,16 @@
     close: close,
     setPage: setPage,
     isOpen: function () { return isOpen && !isPage; },
-    unread: function () { return Math.max(0, lastCount); }
+    unread: function () { return Math.max(0, lastCount); },
+    // true — мессенджер уже открывался и прислал число непрочитанных
+    unreadKnown: function () { return lastCount >= 0; },
+    onUnread: function (fn) { unreadFns.push(fn); },
+    // Перезагрузить рамку (если создана): после регистрации на сайте мессенджер подхватит новый профиль
+    reload: function () {
+      if (!frame) return;
+      lastCount = -1;
+      setBadges(0);
+      try { frame.contentWindow.location.reload(); } catch (e) { frame.src = "messenger/"; }
+    }
   };
 })();

@@ -1,0 +1,137 @@
+/* Аккаунт: кнопка «Войти» / аватар с меню в шапке, окно входа, звёздочка «Избранное» */
+
+/* ── аватар как в мессенджере: картинка или цветной кружок с инициалами ── */
+.acc-ava {
+  display: inline-grid; place-items: center; flex: none; border-radius: 50%; overflow: hidden;
+  color: #fff; font-weight: 700; line-height: 1; letter-spacing: .3px; user-select: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .25); background: var(--card2);
+}
+.acc-ava img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── шапка ── */
+.acc-slot { position: relative; flex: none; display: flex; align-items: center; min-width: 38px; }
+.acc-login {
+  height: 38px; padding: 0 16px; border-radius: 10px; cursor: pointer; white-space: nowrap;
+  border: 1px solid var(--line2); background: var(--card); color: var(--text); font-weight: 600; font-size: 14px;
+}
+.acc-login:hover { border-color: var(--accent); color: var(--link); }
+.acc-btn {
+  position: relative; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 50%;
+  display: grid; place-items: center; width: 38px; height: 38px;
+}
+.acc-btn .acc-ava { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--line2); transition: box-shadow .15s; }
+.acc-btn:hover .acc-ava, .acc-btn[aria-expanded="true"] .acc-ava { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+.acc-dot {
+  position: absolute; top: 0; right: 0; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--good); box-shadow: 0 0 0 2px var(--bg);
+}
+
+.acc-menu {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 70; width: 250px; padding: 6px;
+  background: var(--card); border: 1px solid var(--line2); border-radius: 14px; box-shadow: var(--shadow);
+  animation: acc-pop .14s ease;
+}
+.acc-menu[hidden] { display: none; }
+@keyframes acc-pop { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .acc-menu { animation: none; } }
+.acc-menu-head { display: flex; align-items: center; gap: 10px; padding: 8px 10px 12px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+.acc-menu-head > div { min-width: 0; display: grid; }
+.acc-menu-head b, .acc-menu-head small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acc-menu-head small { color: var(--muted); font-size: 13px; }
+.acc-menu [role="menuitem"] {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border-radius: 9px;
+  border: 0; background: transparent; color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; text-align: left;
+}
+.acc-menu [role="menuitem"]:hover, .acc-menu [role="menuitem"]:focus-visible { background: var(--card2); text-decoration: none; outline: none; }
+.acc-menu svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.acc-menu [data-act="logout"] { color: #ff6b81; }
+.acc-menu [data-act="logout"] svg { stroke: currentColor; }
+.acc-menu .nbadge, .acc-cnt { margin-left: auto; }
+.acc-cnt {
+  min-width: 20px; height: 20px; padding: 0 6px; border-radius: 99px; font-size: 12px; font-weight: 700;
+  line-height: 20px; text-align: center; background: var(--good); color: #0b2416;
+}
+:root[data-theme="light"] .acc-menu [data-act="logout"] { color: #c0213e; }
+:root[data-theme="light"] .acc-cnt { color: #fff; }
+
+@media (max-width: 759px) {
+  .acc-slot { order: 3; }
+  .acc-login { height: 36px; padding: 0 12px; }
+  .acc-btn { width: 36px; height: 36px; }
+  .acc-btn .acc-ava { width: 32px !important; height: 32px !important; font-size: 12px !important; }
+}
+
+/* ── звёздочка «Избранное» (рядом с лайком) ── */
+.fav {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card2); color: var(--muted);
+  padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  transition: color .15s, border-color .15s, background-color .15s;
+}
+.fav:hover { color: var(--text); border-color: var(--line2); }
+.fav .star { font-size: 15px; line-height: 1; }
+.fav.on { color: var(--text); border-color: rgba(255, 190, 60, .55); background: rgba(255, 190, 60, .12); }
+.fav.on .star { color: #ffbe3c; animation: pop .3s ease; }
+:root[data-theme="light"] .fav.on .star { color: #b77900; }
+@media (prefers-reduced-motion: reduce) { .fav.on .star { animation: none; } }
+.fav.sm { padding: 2px 8px; border-radius: 99px; font-size: 13px; }
+.meta .fav.sm { margin-left: auto; }
+.meta .fav.sm + .like.sm { margin-left: 0; }
+
+/* ── окно входа / подтверждения ── */
+.am-back {
+  position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 16px;
+  background: rgba(8, 10, 16, .62); backdrop-filter: blur(3px); animation: am-fade .15s ease;
+  overflow-y: auto;
+}
+@keyframes am-fade { from { opacity: 0; } }
+.am {
+  position: relative; width: 100%; max-width: 420px; padding: 24px; border-radius: 18px;
+  background: var(--card); border: 1px solid var(--line2); box-shadow: var(--shadow); color: var(--text);
+}
+.am-x {
+  position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 8px;
+  border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 15px;
+}
+.am-x:hover { background: var(--card2); color: var(--text); }
+.am-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-right: 30px; }
+.am-brand h2 { margin: 0; font-size: 18px; line-height: 1.3; }
+.am-brand small { color: var(--muted); font-size: 13px; }
+.am-tabs { display: flex; gap: 2px; padding: 3px; margin-bottom: 16px; background: var(--bg2); border: 1px solid var(--line); border-radius: 11px; }
+.am-tabs button {
+  flex: 1; border: 0; background: transparent; color: var(--muted); padding: 7px 4px; border-radius: 8px;
+  cursor: pointer; font-size: 13.5px; font-weight: 600; white-space: nowrap;
+}
+.am-tabs button:hover { color: var(--text); }
+.am-tabs button.on { background: var(--card2); color: var(--text); box-shadow: 0 1px 2px rgba(0, 0, 0, .18); }
+.am-h { margin: 0 0 12px; font-size: 19px; padding-right: 30px; }
+.am-h.danger { color: #ff6b81; }
+:root[data-theme="light"] .am-h.danger { color: #c0213e; }
+.am-why { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; font-size: 14px; background: rgba(79, 157, 255, .12); border: 1px solid rgba(79, 157, 255, .3); }
+.am-p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.am-ul { margin: 0 0 12px; padding-left: 20px; font-size: 14px; }
+.am-ul li { margin-bottom: 3px; }
+.af { margin-bottom: 12px; }
+.af label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.ain {
+  width: 100%; height: 42px; padding: 0 12px; border-radius: 10px; font: inherit; font-size: 15px;
+  border: 1px solid var(--line2); background: var(--bg); color: var(--text);
+}
+.ain:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79, 157, 255, .2); }
+.af-hint { margin: -6px 0 12px; font-size: 12.5px; color: var(--muted); }
+.am-err { min-height: 0; margin: 0 0 10px; font-size: 14px; color: #ff6b81; }
+.am-err:empty { margin: 0; }
+.am-err.ok { color: var(--good); }
+:root[data-theme="light"] .am-err { color: #c0213e; }
+:root[data-theme="light"] .am-err.ok { color: var(--good); }
+.am-btn {
+  width: 100%; height: 44px; border: 0; border-radius: 11px; cursor: pointer; color: #fff; font-weight: 700; font-size: 15px;
+  background: linear-gradient(135deg, #2569d0, #5b5ff0);
+}
+.am-btn:hover { filter: brightness(1.1); }
+.am-btn:disabled, .acc-btn2:disabled { opacity: .6; cursor: progress; }
+.am-foot { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.am-link { border: 0; background: transparent; padding: 0; color: var(--link); cursor: pointer; font-size: 14px; }
+.am-link:hover { text-decoration: underline; }
+.am-row { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.am-open { overflow: hidden; }

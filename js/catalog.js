@@ -107,6 +107,7 @@
         (it.date ? "<span>" + CI.date(it.date) + "</span>" : "") +
         (it.size ? "<span>" + esc(it.size) + "</span>" : "") +
         '<span class="stat" title="Скачиваний">⬇ <span data-count-dl="' + id + '">0</span></span>' +
+        '<button type="button" class="fav sm" data-fav="' + id + '" aria-pressed="false" aria-label="Избранное" title="В избранное"><span class="star">☆</span></button>' +
         '<button type="button" class="like sm" data-like="' + id + '" aria-pressed="false" title="Нравится">' +
           '<span class="heart">❤</span><span class="stat" data-count-like="' + id + '">0</span></button>' +
       "</div></article>";

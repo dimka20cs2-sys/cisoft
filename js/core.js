@@ -96,19 +96,27 @@
     return CI.ITEMS.reduce(function (s, it) { return s + (CI.st(it.id).downloads || 0); }, 0);
   };
 
-  // ── лайки: отметка «я лайкнул» хранится только в этом браузере ──
-  var liked = CI.load("ci-liked", []);
-  if (!Array.isArray(liked)) liked = [];
-  CI.isLiked = function (id) { return liked.indexOf(id) >= 0; };
+  // ── лайки и избранное: только для вошедших (заполняет js/acc-core.js из Firestore) ──
+  try { localStorage.removeItem("ci-liked"); } catch (e) {} // старые анонимные отметки больше не нужны
+  CI.myLikes = {};   // itemId → true
+  CI.myFavs = {};    // itemId → мс добавления
+  CI.isLiked = function (id) { return !!CI.myLikes[id]; };
+  CI.isFav = function (id) { return !!CI.myFavs[id]; };
+  // Вход нужен: открываем окно входа с пояснением (если модуль аккаунта ещё грузится — тост)
+  CI.requireLogin = function (why) {
+    if (CI.acc && CI.acc.openAuth) CI.acc.openAuth("login", why);
+    else CI.toast(why + " Войдите в аккаунт (кнопка «Войти» вверху).");
+  };
+  function signedIn() { return !!(CI.acc && CI.acc.ready && CI.acc.user && CI.acc.profile); }
   CI.toggleLike = function (id) {
-    if (CI.isLiked(id)) {
-      liked = liked.filter(function (x) { return x !== id; }); // в базе не уменьшаем (упрощение)
-    } else {
-      liked.push(id);
-      CI.hit(id, "likes");
-    }
-    CI.save("ci-liked", liked);
-    CI.paintStats(document);
+    if (CI.acc && !CI.acc.ready) return CI.toast("Проверяем вход…");
+    if (!signedIn()) return CI.requireLogin("Лайки ставят зарегистрированные пользователи — так счётчик честный.");
+    CI.acc.toggleLike(id);
+  };
+  CI.toggleFav = function (id) {
+    if (CI.acc && !CI.acc.ready) return CI.toast("Проверяем вход…");
+    if (!signedIn()) return CI.requireLogin("Избранное хранится в личном кабинете.");
+    CI.acc.toggleFav(id);
   };
 
   // Обновить все числа и состояния лайков в разметке
@@ -123,6 +131,14 @@
       var on = CI.isLiked(el.getAttribute("data-like"));
       el.classList.toggle("on", on);
       el.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    root.querySelectorAll("[data-fav]").forEach(function (el) {
+      var on = CI.isFav(el.getAttribute("data-fav"));
+      el.classList.toggle("on", on);
+      el.setAttribute("aria-pressed", on ? "true" : "false");
+      el.title = on ? "Убрать из избранного" : "В избранное";
+      var s = el.querySelector(".star"); if (s) s.textContent = on ? "★" : "☆";
+      var l = el.querySelector(".fav-label"); if (l) l.textContent = on ? "В избранном" : "В избранное";
     });
     var tot = document.getElementById("hero-total");
     if (tot) tot.innerHTML = CI.heroLine();
@@ -142,8 +158,13 @@
   document.addEventListener("click", function (e) {
     var like = e.target.closest && e.target.closest("[data-like]");
     if (like) { e.preventDefault(); e.stopPropagation(); CI.toggleLike(like.getAttribute("data-like")); return; }
+    var fav = e.target.closest && e.target.closest("[data-fav]");
+    if (fav) { e.preventDefault(); e.stopPropagation(); CI.toggleFav(fav.getAttribute("data-fav")); return; }
     var dl = e.target.closest && e.target.closest("a[data-dl]");
-    if (dl) CI.hit(dl.getAttribute("data-dl"), "downloads"); // само скачивание не трогаем
+    if (dl) {
+      CI.hit(dl.getAttribute("data-dl"), "downloads"); // само скачивание не трогаем
+      if (signedIn()) CI.acc.recordDownload(dl.getAttribute("data-dl"), dl.getAttribute("data-dl-label") || "Скачать");
+    }
   });
 
   // ── тосты ──

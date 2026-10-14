@@ -1,11 +1,11 @@
-// Маршрутизация по хэшу: #/ — каталог, #/item/<id>, #/news, #/faq, #/messenger.
+// Маршрутизация по хэшу: #/ — каталог, #/item/<id>, #/news, #/faq, #/messenger, #/account.
 (function () {
   var CI = window.CI, prev = null;
 
   function route() {
     var h = location.hash || "#/";
     var m = h.match(/^#\/item\/(.+)$/);
-    var name = m ? "item" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : "home";
+    var name = m ? "item" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
     var isMsgr = name === "messenger";
 
     document.body.classList.toggle("is-msgr", isMsgr);
@@ -22,6 +22,11 @@
       CI.renderItem(id);
     } else if (name === "news") CI.renderNews();
     else if (name === "faq") CI.renderFaq();
+    else if (name === "account") {
+      // модуль кабинета (js/account.js) грузится отложенно — он сам дорисует страницу
+      if (CI.renderAccount) CI.renderAccount();
+      else { document.title = "Личный кабинет — " + (CI.SITE.name || ""); CI.app.innerHTML = '<div class="empty">Загрузка…</div>'; }
+    }
     else CI.renderHome();
 
     // Новая страница — наверх; фокус на содержимое (для читалок экрана)

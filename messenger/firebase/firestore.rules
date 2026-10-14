@@ -163,22 +163,26 @@ service cloud.firestore {
     }
 
     // ---------- Счётчики сайта: stats/{itemId} → { downloads, likes } ----------
-    // Читать может кто угодно (без входа). Писать — только +1 к одному полю за раз.
-    // Отсутствующее поле считается нулём (клиент пишет setDoc(..., {поле: increment(1)}, {merge: true})).
+    // Читать может кто угодно (без входа). Отсутствующее поле считается нулём.
+    // downloads — анонимно, только +1 за раз (setDoc(..., {downloads: increment(1)}, {merge: true})).
+    // likes — ТОЛЬКО ±1 вместе с созданием/удалением своего likes/{itemId}_{uid} в одном batch.
     match /stats/{itemId} {
       function cnt(d, f) { return d.get(f, 0); }
       function validStats(d) {
         return d.keys().hasOnly(['downloads', 'likes'])
           && cnt(d, 'downloads') is int && cnt(d, 'likes') is int;
       }
+      function likePath() { return /databases/$(database)/documents/likes/$(itemId + '_' + request.auth.uid); }
+      function likeAdded() { return signedIn() && !exists(likePath()) && existsAfter(likePath()); }
+      function likeRemoved() { return signedIn() && exists(likePath()) && !existsAfter(likePath()); }
 
       allow read: if true;
       allow create: if itemId.matches('^[a-z0-9-]{1,40}$')
         && validStats(request.resource.data)
         && (
-          (cnt(request.resource.data, 'downloads') == 0 && cnt(request.resource.data, 'likes') == 0)
-          || (cnt(request.resource.data, 'downloads') == 1 && cnt(request.resource.data, 'likes') == 0)
-          || (cnt(request.resource.data, 'downloads') == 0 && cnt(request.resource.data, 'likes') == 1)
+          ((cnt(request.resource.data, 'downloads') == 0 || cnt(request.resource.data, 'downloads') == 1)
+            && cnt(request.resource.data, 'likes') == 0)
+          || (cnt(request.resource.data, 'downloads') == 0 && cnt(request.resource.data, 'likes') == 1 && likeAdded())
         );
       allow update: if itemId.matches('^[a-z0-9-]{1,40}$')
         && validStats(request.resource.data)
@@ -186,10 +190,51 @@ service cloud.firestore {
         && (
           (cnt(request.resource.data, 'downloads') == cnt(resource.data, 'downloads') + 1
             && cnt(request.resource.data, 'likes') == cnt(resource.data, 'likes'))
-          || (cnt(request.resource.data, 'likes') == cnt(resource.data, 'likes') + 1
-            && cnt(request.resource.data, 'downloads') == cnt(resource.data, 'downloads'))
+          || (cnt(request.resource.data, 'downloads') == cnt(resource.data, 'downloads')
+            && cnt(request.resource.data, 'likes') == cnt(resource.data, 'likes') + 1 && likeAdded())
+          || (cnt(request.resource.data, 'downloads') == cnt(resource.data, 'downloads')
+            && cnt(request.resource.data, 'likes') == cnt(resource.data, 'likes') - 1 && likeRemoved())
         );
       allow delete: if false;
+    }
+
+    // ---------- Лайки сайта: likes/{itemId}_{uid} → { uid, itemId, at } ----------
+    // Создать/удалить можно только свой лайк и только вместе с ±1 в stats/{itemId}.likes (один batch).
+    // Читать — только свои: кто что лайкнул, другим не видно.
+    match /likes/{likeId} {
+      function statsDoc(id) { return /databases/$(database)/documents/stats/$(id); }
+      function likesBefore(id) { return exists(statsDoc(id)) ? get(statsDoc(id)).data.get('likes', 0) : 0; }
+      function likesAfter(id) { return getAfter(statsDoc(id)).data.get('likes', 0); }
+
+      allow read: if signedIn() && resource.data.uid == me();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'itemId', 'at'])
+        && request.resource.data.keys().hasAll(['uid', 'itemId', 'at'])
+        && request.resource.data.uid == me()
+        && request.resource.data.itemId is string
+        && request.resource.data.itemId.matches('^[a-z0-9-]{1,40}$')
+        && likeId == request.resource.data.itemId + '_' + me()
+        && request.resource.data.at == request.time
+        && existsAfter(statsDoc(request.resource.data.itemId))
+        && likesAfter(request.resource.data.itemId) == likesBefore(request.resource.data.itemId) + 1;
+      allow delete: if signedIn() && resource.data.uid == me()
+        && existsAfter(statsDoc(resource.data.itemId))
+        && likesAfter(resource.data.itemId) == likesBefore(resource.data.itemId) - 1;
+      allow update: if false;
+    }
+
+    // ---------- Личный кабинет сайта: userdata/{uid} ----------
+    // { favorites: {itemId: мс}, downloads: [{itemId, label, at}] (≤ 50), lastAccountVisit: мс }. Только владелец.
+    match /userdata/{userId} {
+      function validUserdata() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['favorites', 'downloads', 'lastAccountVisit'])
+          && (!('favorites' in d) || (d.favorites is map && d.favorites.size() <= 200))
+          && (!('downloads' in d) || (d.downloads is list && d.downloads.size() <= 50))
+          && (!('lastAccountVisit' in d) || d.lastAccountVisit is number);
+      }
+      allow read, delete: if signedIn() && userId == me();
+      allow create, update: if signedIn() && userId == me() && validUserdata();
     }
   }
 }

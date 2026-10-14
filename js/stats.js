@@ -1,27 +1,19 @@
 // Счётчики скачиваний и лайков на Firebase Firestore: коллекция stats/{itemId} → { downloads, likes }.
-// Тот же проект, что у мессенджера; вход (Auth) не нужен. Любая ошибка — тихо, сайт работает без чисел.
-const SDK = 'https://www.gstatic.com/firebasejs/11.0.2/';
+// Используем тот же Firebase app ('[DEFAULT]'), что и мессенджер (messenger/js/fb.js): одна сессия входа
+// на сайте и в мессенджере. Скачивания — анонимно +1; лайки меняются только в js/acc-api.js (батчем с likes/*).
+// Любая ошибка — тихо, сайт работает без чисел.
 const ID_RE = /^[a-z0-9-]{1,40}$/;
 
 async function start() {
   const CI = window.CI;
   if (!CI) return;
-  const cfgMod = await import('../messenger/config.js');
-  const { initializeApp } = await import(SDK + 'firebase-app.js');
-  const fs = await import(SDK + 'firebase-firestore.js');
+  const { db, isEmu } = await import('../messenger/js/fb.js');
+  const fs = await import('../messenger/js/fs.js');
 
-  const emu = cfgMod.useEmulators;
-  const cfg = emu
-    ? { apiKey: 'demo-key', projectId: cfgMod.emulatorProjectId, appId: 'demo-site' }
-    : cfgMod.firebaseConfig;
-  const app = initializeApp(cfg, 'cisoft-site');
-  const db = fs.getFirestore(app);
-  if (emu) fs.connectFirestoreEmulator(db, cfgMod.emulatorHosts.firestoreHost, cfgMod.emulatorHosts.firestorePort);
-
-  // +1 к одному полю; документ создаётся при первом обращении (правила разрешают только так)
+  // +1 к скачиваниям; документ создаётся при первом обращении (правила разрешают только так)
   CI.attachStats((id, field) => {
-    if (!ID_RE.test(id) || (field !== 'downloads' && field !== 'likes')) return;
-    fs.setDoc(fs.doc(db, 'stats', id), { [field]: fs.increment(1) }, { merge: true }).catch(() => {});
+    if (!ID_RE.test(id) || field !== 'downloads') return;
+    fs.setDoc(fs.doc(db, 'stats', id), { downloads: fs.increment(1) }, { merge: true }).catch(() => {});
   });
 
   // Живые числа по всем программам (документов немного — по одному на программу)
@@ -34,7 +26,7 @@ async function start() {
     CI.setStats(map);
   }, () => { /* нет доступа/сети — без чисел */ });
 
-  if (emu) window.__ciStats = { db, fs }; // только для локальных проверок на эмуляторе
+  if (isEmu) window.__ciStats = { db, fs }; // только для локальных проверок на эмуляторе
 }
 
 start().catch(() => { /* CDN или Firebase недоступны — без чисел */ });

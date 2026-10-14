@@ -49,6 +49,8 @@
         '<span class="stat dl-count" title="Скачиваний">⬇ <span data-count-dl="' + eid + '">0</span></span>' +
         '<button type="button" class="like" data-like="' + eid + '" aria-pressed="false" title="Нравится">' +
           '<span class="heart">❤</span><span class="like-label">Нравится</span><span class="stat" data-count-like="' + eid + '">0</span></button>' +
+        '<button type="button" class="fav" data-fav="' + eid + '" aria-pressed="false" title="В избранное">' +
+          '<span class="star">☆</span><span class="fav-label">В избранное</span></button>' +
         '<button type="button" class="share-btn" id="share-btn" title="Поделиться">' +
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>Поделиться</button>' +
       "</div>" +
@@ -88,14 +90,14 @@
   function dlButtons(it) {
     if (!it.downloads || !it.downloads.length) {
       var href = it.file || it.link || "#";
-      return '<a class="btn" href="' + esc(href) + '"' + linkAttr(it.file) + ' data-dl="' + esc(it.id) + '">⬇ Скачать' +
+      return '<a class="btn" href="' + esc(href) + '"' + linkAttr(it.file) + ' data-dl="' + esc(it.id) + '" data-dl-label="Скачать">⬇ Скачать' +
         (it.size ? " · " + esc(it.size) : "") + "</a>";
     }
     var list = it.downloads.slice(), rec = CI.recommendIndex(list);
     if (rec > 0) list.unshift(list.splice(rec, 1)[0]);
     return '<div class="dl-list">' + list.map(function (d, i) {
       return '<a class="btn' + (i === 0 ? "" : " btn2") + '" href="' + esc(d.file || d.link || "#") + '"' + linkAttr(d.file) +
-        ' data-dl="' + esc(it.id) + '">' + esc(d.label) + (d.size ? "<small> · " + esc(d.size) + "</small>" : "") + "</a>" +
+        ' data-dl="' + esc(it.id) + '" data-dl-label="' + esc(d.label) + '">' + esc(d.label) + (d.size ? "<small> · " + esc(d.size) + "</small>" : "") + "</a>" +
         (rec >= 0 && i === 0 ? '<div class="rec">✓ Рекомендуем для вашего устройства</div>' : "");
     }).join("") + "</div>";
   }

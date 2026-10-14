@@ -1,0 +1,165 @@
+rules_version = '2';
+
+// Правила безопасности CISOFT Messenger.
+// Публикация: Firebase Console → Firestore Database → Rules → вставить этот файл → Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+    function chatPath(id) { return /databases/$(database)/documents/chats/$(id); }
+    function isMemberOf(id) { return me() in get(chatPath(id)).data.members; }
+
+    // ---------- Профили ----------
+    function validUser() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'username', 'usernameLower', 'avatar', 'color', 'createdAt', 'lastSeen'])
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 60
+        && d.username is string && d.username.lower() == d.usernameLower
+        && d.usernameLower.matches('^[a-z0-9_]{3,20}$')
+        && (d.get('avatar', null) == null || (d.avatar is string && d.avatar.size() <= 60000))
+        && (d.get('color', null) == null || (d.color is string && d.color.size() <= 20));
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && userId == me() && validUser()
+        && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.usernameLower)).data.uid == me();
+      allow update: if signedIn() && userId == me() && validUser()
+        && request.resource.data.usernameLower == resource.data.usernameLower
+        && request.resource.data.username == resource.data.username;
+      allow delete: if false;
+    }
+
+    // usernames/{имя} → { uid }. Занять можно только свободное имя и только до создания профиля.
+    match /usernames/{name} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && name.matches('^[a-z0-9_]{3,20}$')
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == me()
+        && !exists(/databases/$(database)/documents/users/$(me()));
+      allow delete: if signedIn() && resource.data.uid == me();
+      allow update: if false;
+    }
+
+    // ---------- Чаты ----------
+    function validNewChat(chatId) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['type', 'members', 'title', 'ownerId', 'createdAt', 'updatedAt', 'lastMessage', 'lastRead', 'typing', 'unread'])
+        && d.members is list && me() in d.members
+        && d.lastMessage == null && d.lastRead.size() == 0 && d.typing.size() == 0 && d.unread.size() == 0
+        && (
+          (d.type == 'direct' && d.members.size() == 2 && d.members[0] < d.members[1]
+            && chatId == d.members[0] + '_' + d.members[1])
+          ||
+          (d.type == 'group' && d.ownerId == me() && d.members.size() <= 50
+            && d.title is string && d.title.size() > 0 && d.title.size() <= 80)
+        );
+    }
+
+    function ownKeyOnly(field) {
+      return !(field in changed())
+        || request.resource.data[field].diff(resource.data[field]).affectedKeys().hasOnly([me()]);
+    }
+
+    // Обычная активность участника: последнее сообщение, прочтение, «печатает…», счётчики
+    function activity() {
+      return changed().hasOnly(['lastMessage', 'updatedAt', 'lastRead', 'typing', 'unread'])
+        && ownKeyOnly('lastRead') && ownKeyOnly('typing')
+        && (!('lastMessage' in changed()) || request.resource.data.lastMessage.senderId == me());
+    }
+
+    // Создатель группы меняет состав и название
+    function ownerManage() {
+      let d = request.resource.data;
+      return resource.data.type == 'group' && resource.data.ownerId == me()
+        && changed().hasOnly(['members', 'title', 'updatedAt'])
+        && me() in d.members && d.members.size() <= 50
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 80;
+    }
+
+    // Любой участник может удалить из группы только себя
+    function leave() {
+      let d = request.resource.data;
+      return resource.data.type == 'group'
+        && changed().hasOnly(['members', 'ownerId', 'updatedAt'])
+        && d.members.size() == resource.data.members.size() - 1
+        && d.members.toSet() == resource.data.members.toSet().difference([me()].toSet())
+        && (d.ownerId == resource.data.ownerId
+            || (resource.data.ownerId == me() && d.ownerId in d.members));
+    }
+
+    match /chats/{chatId} {
+      allow get: if signedIn() && (resource == null || me() in resource.data.members);
+      allow list: if signedIn() && me() in resource.data.members;
+      allow create: if signedIn() && validNewChat(chatId);
+      allow update: if signedIn() && me() in resource.data.members
+        && (activity() || ownerManage() || leave());
+      allow delete: if false;
+
+      function validMsg() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['senderId', 'type', 'text', 'replyTo', 'mediaId', 'preview', 'width', 'height', 'edited', 'deleted', 'createdAt', 'call'])
+          && d.senderId == me()
+          && d.type in ['text', 'image', 'call', 'system']
+          && d.text is string && d.text.size() <= 4000
+          && d.createdAt == request.time
+          && d.get('deleted', false) == false
+          && (d.get('preview', null) == null || (d.preview is string && d.preview.size() <= 30000))
+          && (d.get('replyTo', null) == null || (d.replyTo is map && d.replyTo.get('text', '').size() <= 300));
+      }
+
+      match /messages/{msgId} {
+        allow read: if signedIn() && isMemberOf(chatId);
+        allow create: if signedIn() && isMemberOf(chatId) && validMsg();
+        allow update: if signedIn() && isMemberOf(chatId)
+          && resource.data.senderId == me()
+          && resource.data.get('deleted', false) == false
+          && changed().hasOnly(['text', 'edited', 'deleted', 'preview'])
+          && request.resource.data.text is string && request.resource.data.text.size() <= 4000;
+        allow delete: if false;
+      }
+
+      match /media/{mediaId} {
+        allow read: if signedIn() && isMemberOf(chatId);
+        allow create: if signedIn() && isMemberOf(chatId)
+          && request.resource.data.keys().hasOnly(['data', 'senderId', 'createdAt'])
+          && request.resource.data.senderId == me()
+          && request.resource.data.data is string
+          && request.resource.data.data.size() <= 950000;
+        allow delete: if signedIn() && resource.data.senderId == me();
+        allow update: if false;
+      }
+    }
+
+    // ---------- Звонки (только 1:1) ----------
+    match /calls/{callId} {
+      function party(d) { return me() == d.callerId || me() == d.calleeId; }
+      function callDoc() { return get(/databases/$(database)/documents/calls/$(callId)).data; }
+
+      allow get: if signedIn() && party(resource.data);
+      allow list: if signedIn() && (resource.data.calleeId == me() || resource.data.callerId == me());
+      allow create: if signedIn()
+        && request.resource.data.callerId == me()
+        && request.resource.data.calleeId != me()
+        && request.resource.data.status == 'ringing'
+        && get(chatPath(request.resource.data.chatId)).data.type == 'direct'
+        && me() in get(chatPath(request.resource.data.chatId)).data.members
+        && request.resource.data.calleeId in get(chatPath(request.resource.data.chatId)).data.members;
+      allow update: if signedIn() && party(resource.data)
+        && !changed().hasAny(['callerId', 'calleeId', 'chatId', 'createdAt', 'offer']);
+      allow delete: if false;
+
+      match /callerCandidates/{cid} {
+        allow read: if signedIn() && party(callDoc());
+        allow create: if signedIn() && callDoc().callerId == me();
+      }
+      match /calleeCandidates/{cid} {
+        allow read: if signedIn() && party(callDoc());
+        allow create: if signedIn() && callDoc().calleeId == me();
+      }
+    }
+  }
+}

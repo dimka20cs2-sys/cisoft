@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CISOFT Messenger</title>
+  <meta name="description" content="CISOFT Messenger — сообщения, фото, аудио- и видеозвонки.">
+  <meta name="theme-color" content="#111217">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://www.gstatic.com http://127.0.0.1:9099 http://127.0.0.1:8080 ws://127.0.0.1:8080 http://localhost:9099 http://localhost:8080; img-src 'self' data: blob:; media-src 'self' blob: mediastream:; style-src 'self' 'unsafe-inline'; frame-src https://*.firebaseapp.com; object-src 'none'; base-uri 'self'">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/overlays.css">
+  <link rel="stylesheet" href="css/call.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div id="boot" class="boot">
+    <div class="boot-logo"></div>
+    <div class="muted">Загрузка…</div>
+  </div>
+
+  <section id="auth" class="auth" hidden></section>
+
+  <div id="app" class="app" hidden>
+    <aside id="sidebar" class="sidebar">
+      <header class="side-head">
+        <button id="btn-settings" class="icon-btn" type="button" title="Настройки" aria-label="Настройки"></button>
+        <div class="search-box">
+          <span class="search-ico"></span>
+          <input id="search" type="search" placeholder="Поиск или @username" autocomplete="off" spellcheck="false">
+        </div>
+        <button id="btn-new" class="icon-btn" type="button" title="Новый чат" aria-label="Новый чат"></button>
+      </header>
+      <div id="search-results" class="search-results" hidden></div>
+      <div id="chat-list" class="chat-list" role="list"></div>
+    </aside>
+    <main id="chat-pane" class="chat-pane">
+      <div class="empty-pane">
+        <div class="empty-ico"></div>
+        <p>Выберите чат слева или найдите собеседника по @username</p>
+      </div>
+    </main>
+  </div>
+
+  <noscript>Для работы мессенджера нужен JavaScript.</noscript>
+</body>
+</html>

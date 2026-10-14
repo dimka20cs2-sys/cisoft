@@ -1,0 +1,84 @@
+/* ---------- Вход / регистрация ---------- */
+.auth {
+  position: fixed; inset: 0; overflow-y: auto; padding: 24px 16px;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(79, 157, 255, .16), transparent 60%),
+    radial-gradient(800px 500px at 90% 90%, rgba(176, 124, 255, .14), transparent 60%),
+    var(--bg);
+}
+.auth-card {
+  width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 20px; padding: 28px 26px 22px; box-shadow: var(--shadow); margin: auto;
+}
+.auth-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.auth-brand img { width: 46px; height: 46px; border-radius: 13px; }
+.auth-brand h1 { font-size: 20px; }
+.auth-brand .muted { font-size: 13px; }
+.auth-tabs { display: flex; background: var(--panel-2); border-radius: 12px; padding: 4px; margin-bottom: 18px; }
+.auth-tabs button {
+  flex: 1; border: 0; background: transparent; padding: 8px; border-radius: 9px;
+  color: var(--muted); cursor: pointer; font-weight: 600;
+}
+.auth-tabs button.on { background: var(--second); color: var(--text); }
+.auth-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 13px; }
+.config-warn {
+  background: rgba(255, 92, 92, .12); border: 1px solid rgba(255, 92, 92, .4);
+  color: var(--text); border-radius: 12px; padding: 10px 12px; font-size: 13px; margin-bottom: 14px;
+}
+
+/* ---------- Основная раскладка ---------- */
+.app { position: fixed; inset: 0; display: flex; }
+.sidebar {
+  width: 340px; flex: 0 0 340px; display: flex; flex-direction: column;
+  background: var(--panel); border-right: 1px solid var(--line); min-width: 0;
+}
+.side-head { display: flex; align-items: center; gap: 6px; padding: 10px 10px 10px 8px; }
+.search-box { position: relative; flex: 1; min-width: 0; }
+.search-box input { border-radius: 20px; padding: 8px 12px 8px 36px; background: var(--panel-2); }
+.search-ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); display: flex; }
+.chat-list, .search-results { flex: 1; overflow-y: auto; padding: 4px 6px 12px; }
+.search-results { flex: none; max-height: 45%; padding-bottom: 0; border-bottom: 1px solid var(--line); }
+.list-title { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 10px 6px; }
+.list-empty { color: var(--muted); text-align: center; padding: 30px 20px; font-size: 14px; }
+
+.chat-item {
+  display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px;
+  cursor: pointer; user-select: none; position: relative; width: 100%;
+  border: 0; background: transparent; text-align: left;
+}
+.chat-item:hover { background: var(--hover); }
+.chat-item.active { background: var(--active); }
+.chat-item .ci-main { flex: 1; min-width: 0; }
+.ci-row { display: flex; align-items: baseline; gap: 8px; }
+.ci-name { flex: 1; min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ci-time { font-size: 12px; color: var(--muted); flex: none; }
+.ci-last { flex: 1; min-width: 0; color: var(--muted); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ci-last .typing { color: var(--accent); }
+.ci-last b { color: var(--text); font-weight: 500; }
+.badge {
+  flex: none; min-width: 22px; height: 22px; padding: 0 7px; border-radius: 11px;
+  background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.ci-status { color: var(--accent); display: inline-flex; flex: none; }
+
+/* ---------- Правая панель ---------- */
+.chat-pane { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+.empty-pane { margin: auto; text-align: center; color: var(--muted); padding: 20px; max-width: 320px; }
+.empty-ico {
+  width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 26px;
+  background: url(../icons/icon-192.png) center/cover; opacity: .9;
+}
+
+/* ---------- Телефон ---------- */
+@media (max-width: 759px) {
+  .sidebar { width: 100%; flex: 1 1 100%; border-right: 0; }
+  .chat-pane { position: absolute; inset: 0; transform: translateX(100%); transition: transform .22s ease; z-index: 5; }
+  .app.show-chat .chat-pane { transform: none; }
+  .app.show-chat .sidebar { visibility: hidden; }
+  .empty-pane { display: none; }
+}
+@media (min-width: 760px) {
+  .only-mobile { display: none !important; }
+}

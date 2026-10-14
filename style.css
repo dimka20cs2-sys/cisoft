@@ -97,6 +97,7 @@ img { max-width: 100%; display: block; }
 .badge.modpack { background: rgba(63, 208, 122, .14); color: var(--good); }
 .badge.config { background: rgba(255, 181, 71, .14); color: var(--warn); }
 .badge.admin { background: rgba(40, 200, 220, .14); color: #4fd1e0; }
+.badge.android { background: rgba(61, 220, 132, .14); color: #3ddc84; }
 .badge.other { background: rgba(176, 124, 255, .14); color: var(--accent2); }
 .empty { color: var(--muted); padding: 40px 0; grid-column: 1 / -1; text-align: center; }
 

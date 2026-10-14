@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Прыжок в небо — CISOFT</title>
+<meta name="description" content="Прыжок в небо — бесконечный прыгун: скачи по платформам всё выше, собирай монеты и бонусы, покупай скины.">
+<meta name="theme-color" content="#111217">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+  <canvas id="cv" aria-label="Игровое поле"></canvas>
+
+  <div id="hud" class="hidden">
+    <div class="hud-l">
+      <div class="hud-h"><b id="hud-h">0</b><span> м</span></div>
+      <div class="hud-c"><i class="coin"></i><b id="hud-c">0</b></div>
+    </div>
+    <div class="hud-r">
+      <button class="ibtn" id="hud-sound" aria-label="Звук"></button>
+      <button class="ibtn" id="hud-pause" aria-label="Пауза">
+        <svg viewBox="0 0 24 24" width="20" height="20"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="touch-hint" class="hidden"><span>&#8592; лево</span><span>право &#8594;</span></div>
+
+  <section id="scr-menu" class="screen">
+    <div class="panel">
+      <h1 class="logo">Прыжок<span>в небо</span></h1>
+      <div class="stats">
+        <div class="stat"><small>Рекорд</small><b id="menu-best">0 м</b></div>
+        <div class="stat"><small>Монеты</small><b><i class="coin"></i><span id="menu-coins">0</span></b></div>
+      </div>
+      <button class="btn primary big" id="btn-play">Играть</button>
+      <div class="row">
+        <button class="btn" id="btn-shop">Магазин</button>
+        <button class="btn" id="btn-help">Как играть</button>
+      </div>
+      <div class="row chips">
+        <button class="chip" id="btn-sound"></button>
+        <button class="chip hidden" id="btn-tilt"></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="scr-help" class="screen hidden">
+    <div class="panel wide">
+      <h2>Как играть</h2>
+      <div class="help">
+        <p><b>Цель:</b> забраться как можно выше. Персонаж прыгает сам — ты рулишь влево и вправо. Края экрана сквозные.</p>
+        <p><b>Компьютер:</b> &#8592; / &#8594; или A / D, пауза — Esc или P.<br><b>Телефон:</b> нажимай на левую или правую половину экрана (или включи наклон).</p>
+        <ul class="legend">
+          <li><i class="lg g"></i>Обычная платформа</li>
+          <li><i class="lg b"></i>Движущаяся</li>
+          <li><i class="lg br"></i>Ломается — не держит!</li>
+          <li><i class="lg v"></i>Мигает и исчезает</li>
+          <li><i class="lg c"></i>Облако — один прыжок</li>
+          <li><i class="lg t"></i>Батут и пружины — суперпрыжок</li>
+        </ul>
+        <p><b>Бонусы:</b> ранец и пропеллер несут вверх, щит спасает от удара, магнит притягивает монеты.</p>
+        <p><b>Опасности:</b> глитчей можно сбить, прыгнув сверху (+3 монеты). Чёрные дыры затягивают — обходи их.</p>
+        <p>Монеты тратятся в магазине на скины и улучшения.</p>
+      </div>
+      <button class="btn primary" data-back>Понятно</button>
+    </div>
+  </section>
+
+  <section id="scr-pause" class="screen hidden">
+    <div class="panel">
+      <h2>Пауза</h2>
+      <p class="muted" id="pause-info"></p>
+      <button class="btn primary big" id="btn-resume">Продолжить</button>
+      <div class="row">
+        <button class="btn" id="btn-restart">Заново</button>
+        <button class="btn" id="btn-menu">В меню</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="scr-over" class="screen hidden">
+    <div class="panel">
+      <h2 id="over-title">Игра окончена</h2>
+      <div class="result">
+        <div class="res-h"><b id="over-h">0</b><span> м</span></div>
+        <div class="res-row"><span>Монеты за забег</span><b><i class="coin"></i><span id="over-c">0</span></b></div>
+        <div class="res-row"><span>Рекорд</span><b id="over-best">0 м</b></div>
+        <div class="res-row"><span>Всего монет</span><b><i class="coin"></i><span id="over-total">0</span></b></div>
+      </div>
+      <button class="btn primary big" id="btn-again">Ещё раз</button>
+      <div class="row">
+        <button class="btn" id="btn-over-shop">Магазин</button>
+        <button class="btn" id="btn-over-menu">В меню</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="scr-shop" class="screen hidden">
+    <div class="panel shop">
+      <div class="shop-head">
+        <h2>Магазин</h2>
+        <div class="wallet"><i class="coin"></i><b id="shop-coins">0</b></div>
+      </div>
+      <div class="tabs">
+        <button class="tab on" data-tab="skins">Скины</button>
+        <button class="tab" data-tab="upg">Улучшения</button>
+      </div>
+      <div class="shop-list" id="shop-list"></div>
+      <button class="btn primary" data-back>Назад</button>
+    </div>
+  </section>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/background.js"></script>
+<script src="js/skins.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/player.js"></script>
+<script src="js/world.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/enemies.js"></script>
+<script src="js/input.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

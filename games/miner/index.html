@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#111217">
+<meta name="description" content="Шахтёр — пиксельная игра про копание: спускайся всё глубже, добывай уголь, железо, золото, редстоун и алмазы, берегись лавы и гравия.">
+<title>Шахтёр — CISOFT</title>
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+  <canvas id="cv" aria-label="Игровое поле"></canvas>
+  <div id="flash"></div>
+  <div id="banner"></div>
+
+  <div id="hud" class="hidden">
+    <div class="hud-energy" title="Энергия кирки">
+      <span class="hud-ico bolt"></span>
+      <div class="bar"><div id="h-energy"></div><span id="h-energy-t">100</span></div>
+    </div>
+    <div class="chip"><span class="lbl">Глубина</span> <b id="h-depth">0 м</b></div>
+    <div class="chip"><span class="lbl">Очки</span> <b id="h-score">0</b></div>
+    <div class="chip chip-torch"><span class="hud-ico torch"></span><b id="h-torch">3</b></div>
+  </div>
+
+  <div id="topbtns">
+    <button id="b-pause" class="ibtn hidden" aria-label="Пауза" title="Пауза (Пробел / Esc)">&#10074;&#10074;</button>
+    <button id="b-sound" class="ibtn" aria-label="Звук" title="Звук вкл/выкл">&#9834;</button>
+  </div>
+
+  <div id="touch" class="hidden">
+    <div class="pad">
+      <button data-dir="U" class="tb tb-u" aria-label="Вверх">&#9650;</button>
+      <button data-dir="L" class="tb tb-l" aria-label="Влево">&#9664;</button>
+      <button data-dir="R" class="tb tb-r" aria-label="Вправо">&#9654;</button>
+      <button data-dir="D" class="tb tb-d" aria-label="Вниз">&#9660;</button>
+    </div>
+    <button id="b-torch" class="tb tb-torch" aria-label="Поставить факел"><span class="hud-ico torch"></span><span id="t-torch">3</span></button>
+  </div>
+
+  <section id="scr-start" class="screen">
+    <div class="panel">
+      <h1 class="logo">ШАХТЁР</h1>
+      <p class="sub">Копай вглубь, добывай руду, берегись лавы</p>
+      <div class="stats-row">
+        <div><span class="lbl">Рекорд</span><b id="s-best">0</b></div>
+        <div><span class="lbl">Монеты</span><b><span class="coin"></span><span id="s-coins">0</span></b></div>
+      </div>
+      <button class="btn primary" data-act="play">Играть</button>
+      <button class="btn" data-act="shop">Улучшения</button>
+      <button class="btn ghost" data-act="help">Как играть</button>
+    </div>
+  </section>
+
+  <section id="scr-help" class="screen">
+    <div class="panel wide">
+      <h2>Как играть</h2>
+      <ul class="help">
+        <li><b>Движение и копание:</b> стрелки или WASD. Упрись в блок — шахтёр начнёт его копать. Вверх — прыжок или подъём по стене шахты.</li>
+        <li><b>На телефоне:</b> кнопки-стрелки внизу экрана или зажми палец рядом с шахтёром в нужную сторону.</li>
+        <li><b>Факел:</b> F / E или кнопка с факелом — ставит свет в темноте.</li>
+        <li><b>Пауза:</b> Пробел или Esc.</li>
+        <li><b>Энергия</b> тратится на каждый блок. Ешь <span class="t-apple">яблоки</span> и <span class="t-bread">хлеб</span>, подбирай связки факелов и открывай сундуки.</li>
+        <li><b>Руда</b> глубже — дороже: уголь, железо (8 м), золото (22 м), редстоун (38 м), алмазы (60 м).</li>
+        <li><b>Опасно:</b> лава убивает с одного касания, гравий падает на голову, падение с высоты отнимает энергию.</li>
+        <li><b>Очки</b> = стоимость руды + глубина &times; 2. Монеты из руды тратятся на улучшения.</li>
+      </ul>
+      <button class="btn primary" data-act="back">Понятно</button>
+    </div>
+  </section>
+
+  <section id="scr-shop" class="screen">
+    <div class="panel wide">
+      <h2>Улучшения</h2>
+      <p class="coins-line">У тебя <span class="coin"></span><b id="shop-coins">0</b> монет</p>
+      <div id="shop-list" class="shop"></div>
+      <button class="btn primary" data-act="back">Готово</button>
+    </div>
+  </section>
+
+  <section id="scr-pause" class="screen">
+    <div class="panel">
+      <h2>Пауза</h2>
+      <button class="btn primary" data-act="resume">Продолжить</button>
+      <button class="btn" data-act="quit">Закончить забег</button>
+    </div>
+  </section>
+
+  <section id="scr-over" class="screen">
+    <div class="panel">
+      <h2>Забег окончен</h2>
+      <p id="o-cause" class="sub"></p>
+      <div class="big-score" id="o-score">0</div>
+      <div id="o-record" class="record hidden">Новый рекорд!</div>
+      <div class="over-grid">
+        <span>Рекорд</span><b id="o-best">0</b>
+        <span>Добыча</span><b id="o-ore">0</b>
+        <span>Глубина</span><b id="o-depth">0 м</b>
+        <span>Монеты</span><b class="good" id="o-coins">+0</b>
+      </div>
+      <button class="btn primary" data-act="play">Ещё раз</button>
+      <button class="btn" data-act="shop">Улучшения</button>
+      <button class="btn ghost" data-act="menu">В меню</button>
+    </div>
+  </section>
+</div>
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/world.js"></script>
+<script src="js/textures.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/render.js"></script>
+<script src="js/player.js"></script>
+<script src="js/input.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

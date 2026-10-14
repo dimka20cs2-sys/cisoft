@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#111217">
+<meta name="description" content="Неоновый космос — вертикальный космический шутер от CISOFT. Уклоняйся, собирай бонусы, побеждай боссов.">
+<title>Неоновый космос — CISOFT</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="wrap">
+  <canvas id="cv" aria-label="Игровое поле"></canvas>
+
+  <div id="hudBtns" class="hidden">
+    <button class="ib" data-act="pause" aria-label="Пауза">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+    </button>
+    <button class="ib snd-ico" id="btnSound" data-act="sound" aria-label="Звук"></button>
+  </div>
+
+  <section id="scr-start" class="screen">
+    <div class="panel">
+      <h1 class="logo"><span class="l1">НЕОНОВЫЙ</span><span class="l2">КОСМОС</span></h1>
+      <div class="stats">
+        <div><small>Рекорд</small><b id="sBest">0</b></div>
+        <div><small>Монеты</small><b id="sCoins" class="gold">0</b></div>
+      </div>
+      <button class="btn primary" data-act="play">Играть</button>
+      <button class="btn" data-act="hangar">Ангар</button>
+      <button class="btn ghost" data-act="help">Как играть</button>
+      <button class="btn ghost small" data-act="sound"><span class="snd-ico"></span><span class="snd-lbl">Звук</span></button>
+    </div>
+  </section>
+
+  <section id="scr-help" class="screen hidden">
+    <div class="panel">
+      <h2>Как играть</h2>
+      <ul class="help">
+        <li><b>Движение:</b> мышь — корабль следует за курсором; на телефоне — веди пальцем по экрану; клавиатура — стрелки или WASD.</li>
+        <li><b>Стрельба</b> автоматическая. Уклоняйся от пуль и врагов.</li>
+        <li><b>Комбо:</b> сбивай врагов без получения урона — множитель очков растёт до x5.</li>
+        <li><b>Каждая 5-я волна</b> — босс с полосой здоровья.</li>
+        <li><b>Монеты</b> трать в ангаре на улучшения и новые корабли.</li>
+        <li><b>Пауза:</b> Esc, P или кнопка в углу.</li>
+      </ul>
+      <div class="powers">
+        <span style="--c:#4f9cff">Тройной выстрел</span>
+        <span style="--c:#3ddc84">Щит</span>
+        <span style="--c:#ffd84f">Магнит монет</span>
+        <span style="--c:#ff4f5e">Бомба</span>
+        <span style="--c:#ff4fd8">Лазер</span>
+      </div>
+      <button class="btn primary" data-act="back">Понятно</button>
+    </div>
+  </section>
+
+  <section id="scr-hangar" class="screen hidden">
+    <div class="panel wide">
+      <div class="hhead">
+        <h2>Ангар</h2>
+        <div class="wallet"><span class="cn"></span><b id="hCoins">0</b></div>
+      </div>
+      <div class="scroll">
+        <h3>Улучшения</h3>
+        <div id="upgList"></div>
+        <h3>Корабли</h3>
+        <div id="skinList" class="skins"></div>
+      </div>
+      <button class="btn primary" data-act="back">Готово</button>
+    </div>
+  </section>
+
+  <section id="scr-pause" class="screen hidden">
+    <div class="panel">
+      <h2>Пауза</h2>
+      <button class="btn primary" data-act="resume">Продолжить</button>
+      <button class="btn" data-act="sound"><span class="snd-ico"></span><span class="snd-lbl">Звук</span></button>
+      <button class="btn ghost" data-act="menu">Выйти в меню</button>
+    </div>
+  </section>
+
+  <section id="scr-over" class="screen hidden">
+    <div class="panel">
+      <h2 class="over">Игра окончена</h2>
+      <div id="oNew" class="newbest hidden">Новый рекорд!</div>
+      <div class="bigscore" id="oScore">0</div>
+      <div class="grid">
+        <div><small>Волна</small><b id="oWave">1</b></div>
+        <div><small>Рекорд</small><b id="oBest">0</b></div>
+        <div><small>Сбито</small><b id="oKills">0</b></div>
+        <div><small>Монеты</small><b id="oCoins" class="gold">0</b></div>
+      </div>
+      <button class="btn primary" data-act="again">Ещё раз</button>
+      <button class="btn" data-act="hangar">Ангар</button>
+      <button class="btn ghost" data-act="menu">В меню</button>
+    </div>
+  </section>
+</div>
+
+<script src="js/util.js"></script>
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/input.js"></script>
+<script src="js/player.js"></script>
+<script src="js/bullets.js"></script>
+<script src="js/enemies.js"></script>
+<script src="js/boss.js"></script>
+<script src="js/pickups.js"></script>
+<script src="js/waves.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/collide.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

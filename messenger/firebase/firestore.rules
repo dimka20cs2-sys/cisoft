@@ -223,6 +223,25 @@ service cloud.firestore {
       allow update: if false;
     }
 
+    // ---------- Игры сайта: gamescores/{игра}/scores/{uid} → { name, username, score, at } ----------
+    // Читать может кто угодно. Писать — только свой результат, только с именем из своего профиля
+    // и только если он лучше прежнего.
+    match /gamescores/{game}/scores/{userId} {
+      function prof() { return get(/databases/$(database)/documents/users/$(me())).data; }
+      function validScore() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['name', 'username', 'score', 'at']) && d.keys().hasAll(['name', 'username', 'score', 'at'])
+          && game in ['miner', 'space', 'jump']
+          && d.score is int && d.score > 0 && d.score <= 1000000000
+          && d.at == request.time
+          && d.name == prof().name && d.username == prof().username;
+      }
+      allow read: if true;
+      allow create: if signedIn() && userId == me() && validScore();
+      allow update: if signedIn() && userId == me() && validScore() && request.resource.data.score > resource.data.score;
+      allow delete: if signedIn() && userId == me();
+    }
+
     // ---------- Личный кабинет сайта: userdata/{uid} ----------
     // { favorites: {itemId: мс}, downloads: [{itemId, label, at}] (≤ 50), lastAccountVisit: мс }. Только владелец.
     match /userdata/{userId} {

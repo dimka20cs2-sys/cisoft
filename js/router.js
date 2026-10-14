@@ -5,7 +5,8 @@
   function route() {
     var h = location.hash || "#/";
     var m = h.match(/^#\/item\/(.+)$/);
-    var name = m ? "item" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
+    var gm = h.match(/^#\/games(?:\/([\w-]+))?$/);
+    var name = m ? "item" : gm ? "games" :h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
     var isMsgr = name === "messenger";
 
     document.body.classList.toggle("is-msgr", isMsgr);
@@ -20,6 +21,8 @@
       var id;
       try { id = decodeURIComponent(m[1]); } catch (e) { id = m[1]; }
       CI.renderItem(id);
+    } else if (name === "games") {
+      if (gm[1]) CI.renderGame(gm[1]); else CI.renderGames();
     } else if (name === "news") CI.renderNews();
     else if (name === "faq") CI.renderFaq();
     else if (name === "account") {

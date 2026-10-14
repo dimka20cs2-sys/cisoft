@@ -1,0 +1,43 @@
+/* Светлая тема. Включается атрибутом <html data-theme="light"> (см. index.html и js/ui.js).
+   Цвета текста подобраны с контрастом ≥ 4.5:1 к фону карточек и страницы. */
+:root[data-theme="light"] {
+  --bg: #f4f5f9;
+  --bg2: #e9ebf2;
+  --card: #ffffff;
+  --card2: #eceef5;
+  --line: #d9dde7;
+  --line2: #b9c0d0;
+  --text: #171a23;
+  --muted: #555d70;
+  --accent: #2563d8;
+  --accent2: #7b3fe4;
+  --link: #1f5bc9;
+  --good: #137a41;
+  --warn: #8a5300;
+  --head-bg: rgba(255, 255, 255, .86);
+  --shadow: 0 18px 50px rgba(20, 30, 60, .18);
+  --b-sys: #1f5bc9;
+  --b-games: #137a41;
+  --b-config: #8a5300;
+  --b-media: #b4134f;
+  --b-social: #1f5bc9;
+  --b-admin: #08707e;
+  --b-android: #137a41;
+  --b-other: #6a2fd0;
+  color-scheme: light;
+}
+:root[data-theme="light"] .badge { background: color-mix(in srgb, currentColor 11%, transparent); }
+:root[data-theme="light"] .card:hover { box-shadow: 0 6px 20px rgba(20, 30, 60, .08); }
+:root[data-theme="light"] .note { background: #fff7e8; border-color: #f0d199; }
+:root[data-theme="light"] .lightbox { background: rgba(10, 12, 20, .88); }
+
+/* Переключатель: в тёмной теме показываем солнце (перейти к светлой), в светлой — луну */
+.theme-btn .i-moon { display: none; }
+:root[data-theme="light"] .theme-btn .i-sun { display: none; }
+:root[data-theme="light"] .theme-btn .i-moon { display: block; }
+
+/* Плавная смена темы (кроме тех, кто просил меньше анимаций) */
+@media (prefers-reduced-motion: no-preference) {
+  body, .top, .card, .chip, .dl, .feature, .foot { transition: background-color .2s, border-color .2s, color .2s; }
+  .card { transition: transform .15s, border-color .15s, box-shadow .15s, background-color .2s; }
+}

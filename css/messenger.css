@@ -1,0 +1,67 @@
+/* Мессенджер внутри сайта: плавающая кнопка, выезжающая панель, страница #/messenger */
+.fab {
+  position: fixed; right: 22px; bottom: 22px; z-index: 60;
+  width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; color: #fff;
+  background: linear-gradient(135deg, #4f9dff, #b07cff);
+  box-shadow: 0 10px 28px rgba(90, 100, 255, .4);
+  transition: transform .2s, box-shadow .2s;
+}
+.fab:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 14px 34px rgba(90, 100, 255, .5); }
+.fab-i { grid-area: 1 / 1; display: grid; place-items: center; transition: opacity .2s, transform .2s; }
+.fab svg { width: 26px; height: 26px; }
+.fab .chat svg { fill: #fff; }
+.fab .x svg { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; }
+.fab .x { opacity: 0; transform: rotate(-90deg); }
+.fab.is-open .chat { opacity: 0; transform: rotate(90deg); }
+.fab.is-open .x { opacity: 1; transform: none; }
+.fab .nbadge { position: absolute; top: -3px; right: -3px; }
+.fab.is-open .nbadge { display: none; }
+.is-msgr .fab { display: none; }
+
+/* Общая рамка: по умолчанию спрятана (но iframe живёт — сессия и звонок не теряются) */
+.msgr {
+  position: fixed; z-index: 55; display: flex; flex-direction: column; overflow: hidden;
+  right: 22px; bottom: 92px; width: 420px; height: 640px;
+  max-height: calc(100dvh - var(--hdr) - 112px); max-width: calc(100vw - 44px);
+  background: var(--card); border: 1px solid var(--line2); border-radius: 18px; box-shadow: var(--shadow);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(16px) scale(.98); transform-origin: bottom right;
+  transition: opacity .22s ease, transform .22s ease, visibility 0s linear .22s;
+}
+.msgr.open {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: none;
+  transition: opacity .22s ease, transform .22s ease, visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) { .msgr, .msgr.open, .fab, .fab-i { transition: none; } }
+
+.msgr-bar {
+  flex: none; display: flex; align-items: center; gap: 4px; height: 44px; padding: 0 6px 0 16px;
+  border-bottom: 1px solid var(--line); background: var(--bg2); font-size: 14px;
+}
+.msgr-bar .sp { flex: 1; }
+.msgr-btn {
+  width: 34px; height: 34px; border: 0; border-radius: 9px; background: transparent; color: var(--muted);
+  display: grid; place-items: center; cursor: pointer;
+}
+.msgr-btn:hover { background: var(--card2); color: var(--text); }
+.msgr-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.msgr-body { flex: 1; min-height: 0; background: #111217; }
+.msgr-body iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+/* Страница #/messenger: на всю высоту под шапкой, без подвала */
+.msgr.full {
+  top: var(--hdr); left: 0; right: 0; bottom: auto; width: 100%; max-width: none;
+  height: calc(100vh - var(--hdr)); height: calc(100dvh - var(--hdr)); max-height: none;
+  border: 0; border-radius: 0; box-shadow: none;
+  opacity: 1; visibility: visible; pointer-events: auto; transform: none; transition: none;
+}
+.msgr.full .msgr-bar { display: none; }
+.is-msgr { overflow: hidden; }
+.is-msgr #app { min-height: calc(100dvh - var(--hdr)); }
+
+@media (max-width: 759px) {
+  .fab { right: 16px; bottom: 16px; }
+  .to-top { right: 80px; bottom: 22px; }
+  .toasts { bottom: 86px; }
+}

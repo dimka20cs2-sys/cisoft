@@ -1,0 +1,82 @@
+/* Каталог и страница программы: итог в герое, сортировка, «Новое», счётчики, лайки, QR, «Поделиться» */
+.hero-total {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
+  padding: 6px 14px; border-radius: 99px; font-size: 14px; font-weight: 600;
+  background: var(--card); border: 1px solid var(--line); color: var(--muted);
+}
+.hero-total::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+
+.tools2 { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 24px; }
+.seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--card); border: 1px solid var(--line); border-radius: 11px; }
+.seg button {
+  border: 0; background: transparent; color: var(--muted); cursor: pointer;
+  padding: 6px 13px; border-radius: 8px; font-size: 14px; font-weight: 500;
+}
+.seg button:hover { color: var(--text); }
+.seg button.on { background: var(--card2); color: var(--text); box-shadow: 0 1px 2px rgba(0, 0, 0, .18); }
+@media (max-width: 600px) {
+  .search { flex: 1 1 100%; margin-left: 0; }
+  .seg { width: 100%; }
+  .seg button { flex: 1; padding: 7px 6px; }
+}
+
+/* Карточка целиком кликабельна через растянутую ссылку; лайк — поверх */
+.card-link { color: inherit; }
+.card-link::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.card-link:hover { text-decoration: none; }
+.card:focus-within { border-color: var(--accent); }
+.card-link:focus-visible { outline: none; }
+
+.new-tag {
+  display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 99px; vertical-align: 1px;
+  font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase;
+  background: linear-gradient(135deg, #2569d0, #7b3fe4); color: #fff;
+}
+
+/* Числа показываем только когда счётчики загрузились */
+.stat { display: none; }
+.stats-on .stat { display: inline; }
+.stats-on .like .stat { display: inline; }
+
+.like {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line); background: var(--card2); color: var(--muted);
+  padding: 7px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600;
+  transition: color .15s, border-color .15s, background-color .15s;
+}
+.like:hover { color: var(--text); border-color: var(--line2); }
+.like .heart { color: var(--muted); transition: transform .2s, color .15s; }
+.like.on { color: var(--text); border-color: rgba(255, 77, 109, .5); background: rgba(255, 77, 109, .1); }
+.like.on .heart { color: #ff4d6d; }
+.like.on .heart { animation: pop .3s ease; }
+@keyframes pop { 50% { transform: scale(1.35); } }
+@media (prefers-reduced-motion: reduce) { .like.on .heart { animation: none; } }
+.like.sm { margin-left: auto; padding: 2px 9px; font-size: 13px; border-radius: 99px; gap: 5px; }
+:root[data-theme="light"] .like.on .heart { color: #d81b47; }
+
+/* Появление карточек */
+.card.reveal { opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+.card.reveal.in { opacity: 1; transform: none; }
+
+/* Блок скачивания на странице программы */
+.rec { margin: -4px 0 4px; font-size: 13px; color: var(--good); text-align: center; font-weight: 600; }
+.item-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.item-actions .dl-count { font-size: 14px; color: var(--muted); margin-right: auto; }
+.stats-on .item-actions .dl-count { display: inline; }
+.share-btn {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card2); color: var(--text);
+  padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600;
+}
+.share-btn:hover { border-color: var(--line2); }
+.share-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.qr {
+  display: flex; align-items: center; gap: 14px; margin-top: 16px; padding: 12px;
+  border: 1px dashed var(--line2); border-radius: 12px;
+}
+.qr-code { width: 112px; height: 112px; flex: none; border-radius: 8px; overflow: hidden; background: #fff; }
+.qr:not(.ready) .qr-code { background: var(--card2); }
+.qr-code svg { width: 100%; height: 100%; display: block; }
+.qr-text { display: grid; gap: 2px; font-size: 13px; color: var(--muted); }
+.qr-text b { color: var(--text); font-size: 14px; }

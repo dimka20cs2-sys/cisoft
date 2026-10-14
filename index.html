@@ -2,33 +2,87 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CISOFT</title>
-<meta name="description" content="Бесплатные программы, сборки и конфиги для Windows и Minecraft">
+<meta name="description" content="Бесплатные программы для Windows, Android, Minecraft и системных администраторов">
+<meta name="theme-color" content="#111217">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="img/pc-monitor/icon.png">
+<link rel="apple-touch-icon" href="messenger/icons/icon-192.png">
+<script>
+  // Тема до отрисовки (без вспышки): сохранённая или системная
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("ci-theme"); } catch (e) {}
+    if (t !== "light" && t !== "dark") t = window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/catalog.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/messenger.css">
 </head>
 <body>
-<header class="top">
+<a class="skip" href="#app">К содержимому</a>
+<header class="top" id="top">
   <div class="wrap">
     <a class="brand" href="#/"><span class="logo" id="logo">CI</span><span id="site-name"></span></a>
-    <nav>
-      <a href="#/">Каталог</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#/" data-nav="home">Каталог</a>
+      <a href="#/news" data-nav="news">Новости</a>
+      <a href="#/faq" data-nav="faq">Вопросы</a>
       <a id="contact-link" href="#" target="_blank" rel="noopener" hidden>Связь</a>
+      <a class="nav-ext" href="messenger/" target="_blank" rel="noopener"><span class="ext-long">Открыть в отдельной вкладке</span><span class="ext-short">В новой вкладке</span> ↗</a>
     </nav>
+    <a class="nav-msg" href="#/messenger" data-nav="messenger">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z"/></svg>
+      <span>Мессенджер</span><b class="nbadge" data-unread hidden></b>
+    </a>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Сменить тему" title="Сменить тему">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2 6 6M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+    </button>
   </div>
 </header>
 
-<main id="app" class="wrap"></main>
+<main id="app" class="wrap" tabindex="-1"></main>
 
-<footer>
+<footer class="foot" id="foot">
   <div class="wrap">
-    <span id="copy"></span>
-    <span class="right">Файлы бесплатны. Скачивайте только с этого сайта.</span>
+    <div class="foot-about">
+      <b>О проекте</b>
+      <p>Небольшие бесплатные программы для Windows и Android, утилиты для сисадминов и игроков Minecraft, плюс собственный мессенджер. Без рекламы и без сбора данных.</p>
+    </div>
+    <div class="foot-links">
+      <b>Разделы</b>
+      <a href="#/">Каталог</a>
+      <a href="#/news">Новости</a>
+      <a href="#/faq">Вопросы и ответы</a>
+      <a href="#/messenger">Мессенджер</a>
+    </div>
+    <div class="foot-links">
+      <b>Ещё</b>
+      <a href="https://github.com/dimka20cs2-sys/cisoft" target="_blank" rel="noopener">Исходный код сайта ↗</a>
+      <a id="foot-contact" href="#" target="_blank" rel="noopener" hidden>Связь</a>
+      <span class="muted">Скачивайте файлы только с этого сайта.</span>
+    </div>
+    <div class="foot-copy" id="copy"></div>
   </div>
 </footer>
 
 <script src="items.js"></script>
-<script src="main.js"></script>
+<script src="js/core.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/item.js"></script>
+<script src="js/item-extras.js"></script>
+<script src="js/news.js"></script>
+<script src="js/faq.js"></script>
+<script src="js/messenger-host.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/router.js"></script>
+<script type="module" src="js/stats.js"></script>
 </body>
 </html>

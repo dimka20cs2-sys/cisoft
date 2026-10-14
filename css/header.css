@@ -1,0 +1,73 @@
+/* Шапка главного сайта: разделы, кнопка «Мессенджер», переключатель темы */
+.skip {
+  position: absolute; left: 12px; top: -60px; z-index: 100;
+  background: var(--accent); color: #fff; padding: 8px 14px; border-radius: 8px;
+}
+.skip:focus { top: 10px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.top .nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.top .nav a {
+  color: var(--muted); font-size: 14px; font-weight: 500;
+  padding: 6px 11px; border-radius: 8px; white-space: nowrap;
+}
+.top .nav a:hover { color: var(--text); background: var(--card); }
+.top .nav a.on { color: var(--text); background: var(--card2); }
+.top .nav .nav-ext { display: none; font-size: 13px; color: var(--link); }
+.is-msgr .top .nav .nav-ext { display: inline-block; }
+
+.nav-msg {
+  position: relative; display: inline-flex; align-items: center; gap: 8px; flex: none;
+  padding: 8px 15px; border-radius: 10px; color: #fff; font-weight: 700; font-size: 14px;
+  background: linear-gradient(135deg, #4f9dff, #b07cff);
+  box-shadow: 0 4px 14px rgba(120, 120, 255, .28);
+  text-shadow: 0 1px 2px rgba(20, 20, 60, .35);
+  transition: filter .15s, transform .15s;
+}
+.nav-msg:hover { text-decoration: none; filter: brightness(1.08); transform: translateY(-1px); }
+.nav-msg.on { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px #8a8dff; }
+.nav-msg svg { width: 18px; height: 18px; fill: #fff; flex: none; }
+
+/* Бейдж непрочитанных (в шапке и на плавающей кнопке) */
+.nbadge {
+  min-width: 20px; height: 20px; padding: 0 6px; border-radius: 99px;
+  background: #e0244a; color: #fff; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center;
+  box-shadow: 0 0 0 2px var(--bg); text-shadow: none;
+}
+.nbadge[hidden] { display: none; }
+.nav-msg .nbadge { position: absolute; top: -8px; right: -8px; }
+
+.theme-btn {
+  flex: none; width: 38px; height: 38px; display: grid; place-items: center;
+  border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--line2); }
+.theme-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Телефон: вторая строка с разделами */
+@media (max-width: 759px) {
+  .top .wrap { height: auto; flex-wrap: wrap; gap: 0 10px; padding-top: 9px; padding-bottom: 0; }
+  .brand { height: 40px; margin-right: auto; }
+  .nav-msg { order: 2; padding: 7px 12px; }
+  .theme-btn { order: 3; width: 36px; height: 36px; }
+  .top .nav {
+    order: 4; flex: 1 1 100%; margin: 6px -20px 0; padding: 0 14px 6px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .top .nav::-webkit-scrollbar { display: none; }
+  .top .nav a { padding: 6px 10px; }
+  .is-msgr .top .nav .nav-ext { margin-left: auto; }
+}
+@media (max-width: 380px) {
+  .nav-msg span { display: none; }
+  .nav-msg { padding: 8px 10px; }
+}
+.nav-ext .ext-short { display: none; }
+@media (max-width: 759px) {
+  .nav-ext .ext-long { display: none; }
+  .nav-ext .ext-short { display: inline; }
+  .top .nav .nav-ext { font-size: 12.5px; padding-left: 6px; padding-right: 4px; }
+}

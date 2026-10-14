@@ -161,5 +161,35 @@ service cloud.firestore {
         allow create: if signedIn() && callDoc().calleeId == me();
       }
     }
+
+    // ---------- Счётчики сайта: stats/{itemId} → { downloads, likes } ----------
+    // Читать может кто угодно (без входа). Писать — только +1 к одному полю за раз.
+    // Отсутствующее поле считается нулём (клиент пишет setDoc(..., {поле: increment(1)}, {merge: true})).
+    match /stats/{itemId} {
+      function cnt(d, f) { return d.get(f, 0); }
+      function validStats(d) {
+        return d.keys().hasOnly(['downloads', 'likes'])
+          && cnt(d, 'downloads') is int && cnt(d, 'likes') is int;
+      }
+
+      allow read: if true;
+      allow create: if itemId.matches('^[a-z0-9-]{1,40}$')
+        && validStats(request.resource.data)
+        && (
+          (cnt(request.resource.data, 'downloads') == 0 && cnt(request.resource.data, 'likes') == 0)
+          || (cnt(request.resource.data, 'downloads') == 1 && cnt(request.resource.data, 'likes') == 0)
+          || (cnt(request.resource.data, 'downloads') == 0 && cnt(request.resource.data, 'likes') == 1)
+        );
+      allow update: if itemId.matches('^[a-z0-9-]{1,40}$')
+        && validStats(request.resource.data)
+        && changed().hasOnly(['downloads', 'likes'])
+        && (
+          (cnt(request.resource.data, 'downloads') == cnt(resource.data, 'downloads') + 1
+            && cnt(request.resource.data, 'likes') == cnt(resource.data, 'likes'))
+          || (cnt(request.resource.data, 'likes') == cnt(resource.data, 'likes') + 1
+            && cnt(request.resource.data, 'downloads') == cnt(resource.data, 'downloads'))
+        );
+      allow delete: if false;
+    }
   }
 }

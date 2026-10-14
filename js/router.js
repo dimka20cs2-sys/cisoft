@@ -1,0 +1,42 @@
+// Маршрутизация по хэшу: #/ — каталог, #/item/<id>, #/news, #/faq, #/messenger.
+(function () {
+  var CI = window.CI, prev = null;
+
+  function route() {
+    var h = location.hash || "#/";
+    var m = h.match(/^#\/item\/(.+)$/);
+    var name = m ? "item" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : "home";
+    var isMsgr = name === "messenger";
+
+    document.body.classList.toggle("is-msgr", isMsgr);
+    document.body.setAttribute("data-route", name);
+    CI.setActiveNav(name === "item" ? "home" : name);
+    CI.msgr.setPage(isMsgr);
+
+    if (isMsgr) {
+      document.title = "Мессенджер — " + (CI.SITE.name || "");
+      CI.app.innerHTML = '<h1 class="sr-only">Мессенджер</h1>';
+    } else if (name === "item") {
+      var id;
+      try { id = decodeURIComponent(m[1]); } catch (e) { id = m[1]; }
+      CI.renderItem(id);
+    } else if (name === "news") CI.renderNews();
+    else if (name === "faq") CI.renderFaq();
+    else CI.renderHome();
+
+    // Новая страница — наверх; фокус на содержимое (для читалок экрана)
+    window.scrollTo(0, 0);
+    if (prev !== null && !isMsgr) {
+      try { CI.app.focus({ preventScroll: true }); } catch (e) {}
+    }
+    if (CI.focusSearchAfterRoute) {
+      CI.focusSearchAfterRoute = false;
+      var s = document.getElementById("search");
+      if (s) s.focus();
+    }
+    prev = name;
+  }
+
+  window.addEventListener("hashchange", route);
+  route();
+})();

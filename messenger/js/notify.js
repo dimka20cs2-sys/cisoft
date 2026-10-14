@@ -9,6 +9,8 @@ const BASE_TITLE = 'CISOFT Messenger';
 // Сообщение для программы-обёртки (WebView2); в браузере просто пропускаем
 export function postToHost(msg) {
   try { window.chrome?.webview?.postMessage(msg); } catch { /* нет обёртки */ }
+  // Встроен в сайт CISOFT (iframe того же origin): сообщаем о непрочитанных/уведомлениях
+  try { if (window.parent !== window) window.parent.postMessage({ source: 'cisoft-messenger', ...msg }, location.origin); } catch { /* нет родителя */ }
 }
 
 let lastTotal = -1;

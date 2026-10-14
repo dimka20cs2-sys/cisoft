@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Новая публикация</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; margin: 10px 0 24px; }
+  .form .full { grid-column: 1 / -1; }
+  @media (max-width: 700px) { .form { grid-template-columns: 1fr; } }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+  input, select, textarea {
+    width: 100%; background: var(--card); border: 1px solid var(--line); color: var(--text);
+    padding: 9px 12px; border-radius: 9px; font: inherit; font-size: 14px; outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { min-height: 84px; resize: vertical; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  pre {
+    background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+    overflow-x: auto; font-size: 13px; line-height: 1.5; max-height: 420px;
+  }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .row .btn { width: auto; padding: 10px 18px; font-size: 14px; }
+  .steps { color: var(--muted); padding-left: 20px; }
+  .steps code { color: var(--text); background: var(--card2); padding: 1px 6px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="index.html"><span class="logo">+</span>Новая публикация</a>
+  <nav><a href="index.html">← К сайту</a></nav></div></header>
+
+<main class="wrap" style="padding-bottom:60px">
+  <section class="hero" style="padding-bottom:10px">
+    <h1>Добавить <span>публикацию</span></h1>
+    <p>Заполни поля — внизу появится готовый блок. Его нужно вставить в файл <b>items.js</b> перед строкой «следующая публикация — сюда».</p>
+  </section>
+
+  <div class="form">
+    <div><label>Название *</label><input id="name" placeholder="Например: Minecraft Boost Pack"></div>
+    <div><label>Тип</label><select id="type"></select></div>
+    <div class="full"><label>Коротко (одна строка для карточки) *</label><input id="short" placeholder="Что это и зачем — в одном предложении"></div>
+    <div class="full"><label>Описание</label><textarea id="description" placeholder="Абзацы разделяй пустой строкой"></textarea></div>
+    <div><label>Версия</label><input id="version" placeholder="1.0.0"></div>
+    <div><label>Дата</label><input id="date" type="date"></div>
+    <div><label>Файл в папке downloads</label><input id="file" placeholder="MyPack.zip"><div class="hint">Или оставь пустым и укажи ссылку справа</div></div>
+    <div><label>…или ссылка на скачивание</label><input id="link" placeholder="https://drive.google.com/..."><div class="hint">Для больших файлов (больше 100 МБ)</div></div>
+    <div><label>Размер</label><input id="size" placeholder="25 МБ"></div>
+    <div><label>ID (для адреса страницы)</label><input id="id" placeholder="создастся из названия"></div>
+    <div class="full"><label>Возможности — по одной на строку: «Заголовок — описание»</label><textarea id="features" placeholder="Больше FPS — Sodium и Lithium ускоряют игру в 2–3 раза"></textarea></div>
+    <div><label>Требования — по одному на строку</label><textarea id="requirements" placeholder="Minecraft 1.21.1&#10;Prism Launcher"></textarea></div>
+    <div><label>Скриншоты — имена файлов из img/&lt;id&gt;/, по одному на строку</label><textarea id="shots" placeholder="1.png | Главное меню&#10;2.png | В игре"></textarea><div class="hint">Через « | » можно добавить подпись</div></div>
+    <div><label>Иконка (файл в img/&lt;id&gt;/)</label><input id="icon" placeholder="icon.png — можно не указывать"></div>
+    <div><label>Теги через запятую</label><input id="tags" placeholder="Minecraft, FPS, Fabric"></div>
+    <div class="full"><label>Важные заметки — по одной на строку</label><textarea id="notes" placeholder="Перед установкой сделайте копию папки mods"></textarea></div>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="copy">Скопировать блок</button>
+    <span id="copied" class="hint"></span>
+  </div>
+  <pre id="out"></pre>
+
+  <div class="section">
+    <h2>Что сделать дальше</h2>
+    <ol class="steps" id="steps"></ol>
+  </div>
+</main>
+
+<script src="items.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  var sel = $("type");
+  Object.keys(window.TYPES).forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = window.TYPES[k]; sel.appendChild(o); });
+  $("date").value = new Date().toISOString().slice(0, 10);
+
+  var translit = { а:"a",б:"b",в:"v",г:"g",д:"d",е:"e",ё:"e",ж:"zh",з:"z",и:"i",й:"y",к:"k",л:"l",м:"m",н:"n",о:"o",п:"p",р:"r",с:"s",т:"t",у:"u",ф:"f",х:"h",ц:"c",ч:"ch",ш:"sh",щ:"sch",ъ:"",ы:"y",ь:"",э:"e",ю:"yu",я:"ya" };
+  function slug(s) {
+    return s.toLowerCase().split("").map(function (c) { return translit[c] != null ? translit[c] : c; }).join("")
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item";
+  }
+  function lines(id) { return $(id).value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean); }
+  function q(s) { return JSON.stringify(s); }
+
+  function build() {
+    var id = $("id").value.trim() || slug($("name").value);
+    var o = [];
+    o.push("  {");
+    o.push("    id: " + q(id) + ",");
+    o.push("    type: " + q(sel.value) + ",");
+    o.push("    name: " + q($("name").value.trim()) + ",");
+    o.push("    short: " + q($("short").value.trim()) + ",");
+    if ($("icon").value.trim()) o.push("    icon: " + q("img/" + id + "/" + $("icon").value.trim()) + ",");
+    if ($("version").value.trim()) o.push("    version: " + q($("version").value.trim()) + ",");
+    if ($("date").value) o.push("    date: " + q($("date").value) + ",");
+    if ($("size").value.trim()) o.push("    size: " + q($("size").value.trim()) + ",");
+    if ($("file").value.trim()) o.push("    file: " + q("downloads/" + $("file").value.trim()) + ",");
+    else if ($("link").value.trim()) o.push("    link: " + q($("link").value.trim()) + ",");
+    var tags = $("tags").value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    if (tags.length) o.push("    tags: [" + tags.map(q).join(", ") + "],");
+    var req = lines("requirements");
+    if (req.length) o.push("    requirements: [\n" + req.map(function (r) { return "      " + q(r) + ","; }).join("\n") + "\n    ],");
+    var desc = $("description").value.split(/\n\s*\n/).map(function (s) { return s.replace(/\s*\n\s*/g, " ").trim(); }).filter(Boolean);
+    if (desc.length) o.push("    description: [\n" + desc.map(function (d) { return "      " + q(d) + ","; }).join("\n") + "\n    ],");
+    var feats = lines("features");
+    if (feats.length) o.push("    features: [\n" + feats.map(function (f) {
+      var p = f.split(/\s+[—–-]\s+/);
+      return "      { title: " + q(p[0]) + ", text: " + q(p.slice(1).join(" — ")) + " },";
+    }).join("\n") + "\n    ],");
+    var shots = lines("shots");
+    if (shots.length) o.push("    screenshots: [\n" + shots.map(function (s) {
+      var p = s.split("|");
+      return "      { src: " + q("img/" + id + "/" + p[0].trim()) + ", caption: " + q((p[1] || "").trim()) + " },";
+    }).join("\n") + "\n    ],");
+    var notes = lines("notes");
+    if (notes.length) o.push("    notes: [\n" + notes.map(function (n) { return "      " + q(n) + ","; }).join("\n") + "\n    ],");
+    if ($("version").value.trim()) o.push("    changelog: [\n      { version: " + q($("version").value.trim()) + ", date: " + q($("date").value) + ", changes: [\"Первый выпуск\"] },\n    ],");
+    o.push("  },");
+    $("out").textContent = o.join("\n");
+
+    var st = [];
+    if ($("file").value.trim()) st.push("Положи файл <code>" + esc($("file").value.trim()) + "</code> в папку <code>downloads</code>");
+    if (shots.length || $("icon").value.trim()) st.push("Создай папку <code>img/" + esc(id) + "</code> и положи туда картинки");
+    st.push("Открой <code>items.js</code> и вставь блок перед строкой <code>// ↓ следующая публикация — сюда</code>");
+    st.push("Открой <code>index.html</code> и проверь страницу, потом загрузи изменения на хостинг");
+    if (ids.indexOf(id) >= 0) st.unshift("<b style='color:var(--warn)'>ID «" + esc(id) + "» уже занят — поменяй его</b>");
+    $("steps").innerHTML = st.map(function (s) { return "<li>" + s + "</li>"; }).join("");
+  }
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var ids = (window.ITEMS || []).map(function (x) { return x.id; });
+
+  document.querySelectorAll("input, select, textarea").forEach(function (el) { el.addEventListener("input", build); });
+  $("copy").onclick = function () {
+    var t = $("out").textContent;
+    function ok() { $("copied").textContent = "Скопировано ✓"; setTimeout(function () { $("copied").textContent = ""; }, 2000); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok);
+    else { var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); ok(); }
+  };
+  build();
+</script>
+</body>
+</html>

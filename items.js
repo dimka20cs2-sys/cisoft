@@ -14,18 +14,20 @@ window.SITE = {
 
 // Типы публикаций (можно добавлять свои)
 window.TYPES = {
-  program: "Программа",
+  system:  "Система",
   admin:   "Сисадмину",
+  games:   "Игры",
+  media:   "Мультимедиа",
   android: "Android",
   modpack: "Сборка",
   config:  "Конфиг",
   other:   "Другое",
-};
+}
 
 window.ITEMS = [
   {
     id: "pc-monitor",
-    type: "program",
+    type: "system",
     name: "PC Monitor",
     short: "Полная аналитика компьютера, очистка оперативной памяти и оптимизация Windows в одном окне.",
     icon: "img/pc-monitor/icon.png",
@@ -67,7 +69,7 @@ window.ITEMS = [
 
   {
     id: "mc-backup",
-    type: "program",
+    type: "games",
     name: "MC Backup",
     short: "Резервные копии миров Minecraft в один клик — и автоматически, пока ты играешь.",
     icon: "img/mc-backup/icon.png",
@@ -106,7 +108,7 @@ window.ITEMS = [
 
   {
     id: "disk-space",
-    type: "program",
+    type: "system",
     name: "Disk Space",
     short: "Показывает, что занимает место на диске: самые большие папки, файлы и типы файлов.",
     icon: "img/disk-space/icon.png",

@@ -58,3 +58,5 @@
 
 /* На странице игры плавающая кнопка мессенджера не закрывает поле (мессенджер есть в шапке) */
 body:has(.game-page) .fab { display: none; }
+
+.games-h2 { font-size: 22px; margin: 8px 0 14px; }

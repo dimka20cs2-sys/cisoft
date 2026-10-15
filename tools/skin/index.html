@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skin Studio — редактор скинов Minecraft | CISOFT</title>
+<meta name="description" content="Редактор и 3D-просмотр скинов Minecraft прямо в браузере: рисование по модели, загрузка по нику, шаблоны, Steve и Alex.">
+<meta name="theme-color" content="#111217">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="icon.png" alt="" width="28" height="28"><b>Skin Studio</b><span>CISOFT</span></div>
+  <div class="actions">
+    <button class="btn" id="b-open" data-i="open" title="Открыть PNG (64×64 или 64×32)">Открыть PNG</button>
+    <form class="nick" id="f-nick" autocomplete="off">
+      <input id="i-nick" placeholder="Ник игрока" maxlength="16" spellcheck="false" aria-label="Ник игрока Minecraft">
+      <button class="btn" data-i="user" title="Загрузить скин по нику">По нику</button>
+    </form>
+    <select id="s-tpl" class="btn" title="Шаблоны" aria-label="Шаблон"><option value="">Шаблоны…</option></select>
+    <div class="seg" id="g-model" title="Модель рук">
+      <button data-v="classic" class="on">Steve</button><button data-v="slim">Alex</button>
+    </div>
+    <button class="btn primary" id="b-save" data-i="download"><span class="hm">Скачать&nbsp;</span>PNG</button>
+    <button class="btn icon" id="b-help" data-i="help" title="Как поставить скин" aria-label="Справка"></button>
+  </div>
+</header>
+
+<main class="app">
+  <nav class="tools" id="tools" aria-label="Инструменты">
+    <button data-tool="rotate" data-i="hand" title="Вращение (R)"></button>
+    <button data-tool="pencil" data-i="pencil" title="Карандаш (B)"></button>
+    <button data-tool="eraser" data-i="eraser" title="Ластик (E)"></button>
+    <button data-tool="fill" data-i="fill" title="Заливка по грани (G)"></button>
+    <button data-tool="picker" data-i="picker" title="Пипетка (I)"></button>
+    <button data-tool="line" data-i="line" title="Линия (L)"></button>
+    <button data-tool="darken" data-i="darken" title="Затемнить (D)"></button>
+    <button data-tool="lighten" data-i="lighten" title="Осветлить (U)"></button>
+    <button data-tool="noise" data-i="noise" title="Шум — текстура ткани (N)"></button>
+    <i class="sep"></i>
+    <button id="t-mirror" data-i="mirror" title="Зеркальное рисование (M)"></button>
+    <button id="t-layer" class="lay" title="Слой 1 / слой 2 (Tab)"><b>1</b><small>слой</small></button>
+    <button id="t-grid" data-i="grid" title="Сетка развёртки" class="on"></button>
+    <i class="sep"></i>
+    <button id="t-undo" data-i="undo" title="Отменить (Ctrl+Z)"></button>
+    <button id="t-redo" data-i="redo" title="Повторить (Ctrl+Y)"></button>
+  </nav>
+
+  <section class="view" id="view">
+    <canvas id="bg"></canvas>
+    <canvas id="gl" aria-label="3D-модель скина"></canvas>
+    <div class="ov tl">
+      <div class="seg" id="g-pose">
+        <button data-v="stand" class="on">Стоит</button><button data-v="walk">Идёт</button><button data-v="wave">Машет</button>
+      </div>
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="c-auto" checked><span>Автоповорот</span></label>
+        <label class="chk"><input type="checkbox" id="c-anim" checked><span>Анимация</span></label>
+      </div>
+    </div>
+    <div class="ov tr bgs" id="g-bg" title="Фон">
+      <button data-v="dark" class="on" title="Тёмный"></button><button data-v="light" title="Светлый"></button>
+      <button data-v="checker" title="Шахматка"></button><button data-v="grass" title="Трава"></button>
+    </div>
+    <div class="ov bl parts" id="g-parts">
+      <button data-p="overlay" class="on">2-й слой</button><button data-p="head" class="on">Голова</button>
+      <button data-p="body" class="on">Тело</button><button data-p="rarm" class="on">Рука П</button>
+      <button data-p="larm" class="on">Рука Л</button><button data-p="rleg" class="on">Нога П</button>
+      <button data-p="lleg" class="on">Нога Л</button>
+    </div>
+    <div class="ov br">
+      <button class="btn sm" id="b-reset" data-i="target" title="Сбросить вид"></button>
+      <button class="btn sm" id="b-shot" data-i="camera">Скриншот 3D</button>
+    </div>
+    <div class="hint" id="hint">Тяните по модели — рисовать, по фону — вращать. Колесо/щипок — зум.</div>
+    <div class="nogl">WebGL недоступен в этом браузере — 3D-вид отключён, но 2D-редактор работает.</div>
+  </section>
+
+  <aside class="side">
+    <div class="card flatcard">
+      <div class="card-h"><b>Развёртка</b><span id="status2d" class="muted"></span></div>
+      <canvas id="flat" aria-label="Развёртка скина 64×64"></canvas>
+    </div>
+    <div class="card colors" id="colors">
+      <div class="picker">
+        <div class="svwrap"><canvas id="c-sv" width="240" height="150"></canvas><i id="c-sv-dot"></i></div>
+        <div class="huewrap"><canvas id="c-hue" width="240" height="14"></canvas><i id="c-hue-dot"></i></div>
+        <div class="hexrow"><span id="c-swatch"></span><input id="c-hex" maxlength="7" spellcheck="false" aria-label="Цвет HEX"></div>
+      </div>
+      <div class="pal"><div class="lbl">Палитра</div><div id="c-palette" class="swatches"></div>
+        <div class="lbl">Последние</div><div id="c-recent" class="swatches"></div></div>
+    </div>
+    <div class="card tip">
+      <b>Как поставить скин</b>
+      <p><b>minecraft.net</b> → Профиль → Скин → загрузите PNG и выберите модель (Classic / Slim).</p>
+      <p><b>TLauncher</b> → Профиль → Сменить скин.</p>
+    </div>
+  </aside>
+</main>
+
+<div class="drop"><div>Отпустите PNG-файл скина</div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="help">
+  <h2>Skin Studio — справка</h2>
+  <p><b>Рисование:</b> по 2D-развёртке или прямо по 3D-модели. Вращение — тянуть по фону или инструмент «Рука»; зум — колесо или щипок.</p>
+  <p><b>Клавиши:</b> B карандаш, E ластик, G заливка, I пипетка, L линия, D/U темнее/светлее, N шум, M зеркало, Tab слой, Ctrl+Z / Ctrl+Y.</p>
+  <p><b>Слой 2</b> — шапка, куртка, рукава и штанины поверх основного слоя.</p>
+  <p><b>Поставить скин:</b> minecraft.net → Профиль → Скин; в TLauncher — Профиль → Сменить скин.</p>
+  <p class="muted">Черновик сохраняется в браузере автоматически.</p>
+  <form method="dialog"><button class="btn primary">Понятно</button></form>
+</dialog>
+<input type="file" id="file" accept="image/png,.png" hidden>
+
+<script src="js/skin.js"></script>
+<script src="js/model.js"></script>
+<script src="js/render.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/color.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/editor2d.js"></script>
+<script src="js/viewer.js"></script>
+<script src="js/io.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

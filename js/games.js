@@ -24,15 +24,25 @@
     },
   ];
 
-  function game(id) { return CI.GAMES.filter(function (g) { return g.id === id; })[0]; }
+  // Веб-инструменты (без таблицы лидеров), открываются так же — в рамке на странице
+  CI.TOOLS = [
+    {
+      id: "skin", name: "Skin Studio", color: "#3ddc84", dir: "tools/skin/", tool: true,
+      short: "Редактор скинов Minecraft с 3D-просмотром: рисуй прямо по модели, загружай скин по нику, скачивай PNG.",
+      how: ["Загрузите свой PNG, шаблон или скин по нику игрока", "Рисуйте на развёртке или прямо по 3D-модели", "Зеркало рисует сразу обе руки и ноги", "«Скачать PNG» — и ставьте скин в Minecraft или TLauncher"],
+    },
+  ];
+
+  function game(id) { return CI.GAMES.concat(CI.TOOLS).filter(function (g) { return g.id === id; })[0]; }
+  function dir(g) { return g.dir || "games/" + g.id + "/"; }
   function best(id) { try { return +localStorage.getItem("ci-game-best-" + id) || 0; } catch (e) { return 0; } }
   function fmt(n) { return Math.round(n).toLocaleString("ru-RU"); }
 
   function card(g) {
     var b = best(g.id);
     return '<a class="game-card" href="#/games/' + g.id + '" style="--gc:' + g.color + '">' +
-      '<span class="game-cover"><img src="games/' + g.id + '/cover.png" alt="" loading="lazy"><span class="game-play">▶ Играть</span></span>' +
-      '<span class="game-info"><img class="game-icon" src="games/' + g.id + '/icon.png" alt="">' +
+      '<span class="game-cover"><img src="' + dir(g) + 'cover.png" alt="" loading="lazy"><span class="game-play">' + (g.tool ? "✎ Открыть" : "▶ Играть") + "</span></span>" +
+      '<span class="game-info"><img class="game-icon" src="' + dir(g) + 'icon.png" alt="">' +
       '<span><b>' + esc(g.name) + "</b><small>" + esc(g.short) + "</small>" +
       (b ? '<em class="game-best">Твой рекорд: ' + fmt(b) + " " + g.unit + "</em>" : "") + "</span></span></a>";
   }
@@ -41,6 +51,7 @@
     document.title = "Игры — " + (CI.SITE.name || "");
     CI.app.innerHTML = '<section class="page-head"><h1>Игры</h1><p>Бесплатные игры прямо в браузере — на компьютере и на телефоне. Без установки и без рекламы.</p></section>' +
       '<div class="games-grid">' + CI.GAMES.map(card).join("") + "</div>" +
+      (CI.TOOLS.length ? '<h2 class="games-h2">Инструменты для Minecraft</h2><div class="games-grid">' + CI.TOOLS.map(card).join("") + "</div>" : "") +
       '<div id="games-top"></div>';
     if (CI.renderGamesTop) CI.renderGamesTop(document.getElementById("games-top"));
   };
@@ -49,18 +60,18 @@
     var g = game(id);
     if (!g) { CI.renderGames(); return; }
     document.title = g.name + " — " + (CI.SITE.name || "");
-    var src = "games/" + g.id + "/";
+    var src = dir(g), pool = g.tool ? CI.TOOLS : CI.GAMES;
     CI.app.innerHTML =
       '<div class="game-page" style="--gc:' + g.color + '">' +
-      '<div class="game-bar"><a class="btn btn2" href="#/games">← Все игры</a><h1>' + esc(g.name) + "</h1>" +
+      '<div class="game-bar' + (g.tool ? " is-tool" : "") + '"><a class="btn btn2" href="#/games">← Все игры</a><h1>' + esc(g.name) + "</h1>" +
       '<span class="game-best" id="game-best">' + (best(g.id) ? "Рекорд: " + fmt(best(g.id)) + " " + g.unit : "") + "</span>" +
       '<button class="btn btn2" id="game-full" type="button">⛶ На весь экран</button>' +
       '<a class="btn btn2" href="' + src + '" target="_blank" rel="noopener">↗ Отдельно</a></div>' +
       '<div class="game-frame" id="game-frame"><iframe src="' + src + '" title="' + esc(g.name) + '" allow="fullscreen; autoplay; gamepad" allowfullscreen></iframe></div>' +
-      '<div class="game-side"><section><h2>Как играть</h2><ul>' + g.how.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + "</ul></section>" +
-      '<section id="game-top"></section>' +
-      '<section><h2>Другие игры</h2><div class="games-mini">' + CI.GAMES.filter(function (x) { return x !== g; }).map(function (x) {
-        return '<a href="#/games/' + x.id + '"><img src="games/' + x.id + '/icon.png" alt=""><span>' + esc(x.name) + "</span></a>";
+      '<div class="game-side"><section><h2>' + (g.tool ? "Как пользоваться" : "Как играть") + "</h2><ul>" + g.how.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + "</ul></section>" +
+      (g.tool ? "" : '<section id="game-top"></section>') +
+      '<section><h2>' + (g.tool ? "Игры" : "Другие игры") + '</h2><div class="games-mini">' + CI.GAMES.filter(function (x) { return x !== g; }).map(function (x) {
+        return '<a href="#/games/' + x.id + '"><img src="' + dir(x) + 'icon.png" alt=""><span>' + esc(x.name) + "</span></a>";
       }).join("") + "</div></section></div></div>";
 
     var frame = document.getElementById("game-frame");
@@ -70,7 +81,7 @@
     };
     var ifr = frame.querySelector("iframe");
     ifr.addEventListener("load", function () { try { ifr.contentWindow.focus(); } catch (e) {} });
-    if (CI.renderGameTop) CI.renderGameTop(g, document.getElementById("game-top"));
+    if (CI.renderGameTop && !g.tool) CI.renderGameTop(g, document.getElementById("game-top"));
   };
 
   // Итоги забега из iframe: локальный рекорд + (если есть) таблица лидеров

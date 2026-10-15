@@ -242,6 +242,70 @@ service cloud.firestore {
       allow delete: if signedIn() && userId == me();
     }
 
+    // ---------- CISOFT LAN: виртуальные сети ----------
+    // lannets/{netId} — { name, ownerId, createdAt, maxMembers, pro, open }
+    // lannets/{netId}/secret/pass — { hash } (sha256(netId + ":" + пароль)); не читается никем
+    // lannets/{netId}/members/{uid} — запись участника (вступить можно только с верным proof)
+    // lannets/{netId}/chat/{msgId} — чат сети
+    match /lannets/{netId} {
+      function lanNet() { return /databases/$(database)/documents/lannets/$(netId); }
+      function lanMember(uid) { return exists(/databases/$(database)/documents/lannets/$(netId)/members/$(uid)); }
+      function lanOwner() { return get(lanNet()).data.ownerId == me(); }
+
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && netId.matches('^[a-z0-9]{10}$')
+        && request.resource.data.ownerId == me()
+        && request.resource.data.keys().hasOnly(['name', 'ownerId', 'createdAt', 'maxMembers', 'pro', 'open'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 40
+        && request.resource.data.maxMembers is int && request.resource.data.maxMembers >= 2 && request.resource.data.maxMembers <= 64;
+      allow update: if signedIn() && resource.data.ownerId == me()
+        && request.resource.data.ownerId == me()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'maxMembers', 'open', 'pro'])
+        && request.resource.data.maxMembers is int && request.resource.data.maxMembers >= 2 && request.resource.data.maxMembers <= 64;
+      allow delete: if signedIn() && resource.data.ownerId == me();
+
+      match /secret/{doc} {
+        allow read: if false;
+        allow create: if signedIn() && doc == 'pass' && get(lanNet()).data.ownerId == me()
+          && request.resource.data.keys().hasOnly(['hash']) && request.resource.data.hash is string;
+        allow update: if signedIn() && doc == 'pass' && get(lanNet()).data.ownerId == me()
+          && request.resource.data.keys().hasOnly(['hash']);
+        allow delete: if signedIn() && get(lanNet()).data.ownerId == me();
+      }
+
+      match /members/{uid} {
+        function validMember() {
+          let d = request.resource.data;
+          return d.keys().hasOnly(['name', 'username', 'vip', 'pubKey', 'candidates', 'online', 'seen', 'proof'])
+            && d.name is string && d.name.size() <= 60
+            && d.vip is string && d.vip.matches('^10[.]77[.][0-9]{1,3}[.][0-9]{1,3}$')
+            && d.pubKey is string && d.pubKey.size() <= 300
+            && d.candidates is list && d.candidates.size() <= 12;
+        }
+        function proofOk() {
+          return get(lanNet()).data.get('open', false) == true
+            || request.resource.data.proof == get(/databases/$(database)/documents/lannets/$(netId)/secret/pass).data.hash;
+        }
+        allow read: if signedIn() && (lanMember(me()) || lanOwner());
+        allow create: if signedIn() && uid == me() && validMember() && proofOk();
+        allow update: if signedIn() && uid == me() && validMember()
+          && request.resource.data.proof == resource.data.proof;
+        allow delete: if signedIn() && (uid == me() || lanOwner());
+      }
+
+      match /chat/{msgId} {
+        allow read: if signedIn() && lanMember(me());
+        allow create: if signedIn() && lanMember(me())
+          && request.resource.data.keys().hasOnly(['uid', 'name', 'text', 'at'])
+          && request.resource.data.uid == me()
+          && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 500
+          && request.resource.data.at == request.time;
+        allow delete: if signedIn() && (resource.data.uid == me() || lanOwner());
+        allow update: if false;
+      }
+    }
+
     // ---------- Личный кабинет сайта: userdata/{uid} ----------
     // { favorites: {itemId: мс}, downloads: [{itemId, label, at}] (≤ 50), lastAccountVisit: мс }. Только владелец.
     match /userdata/{userId} {

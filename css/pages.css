@@ -93,3 +93,13 @@
 .toast-x:hover { color: var(--text); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+/* Приглашение в сеть CISOFT LAN (#/lan/<id>) */
+.lan-invite { max-width: 640px; margin: 40px auto; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px; text-align: center; }
+.lan-invite .lan-icon { width: 88px; height: 88px; border-radius: 20px; }
+.lan-invite h1 { font-size: 26px; margin: 14px 0 10px; }
+.lan-id { font-size: 18px; display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.lan-id b { font-family: Consolas, monospace; letter-spacing: 1px; }
+.lan-id .btn, .lan-actions .btn { width: auto; padding: 10px 16px; }
+.lan-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 18px 0; }
+.lan-steps { text-align: left; color: var(--muted); line-height: 1.7; margin: 18px auto; max-width: 480px; }

@@ -103,3 +103,7 @@
 .lan-id .btn, .lan-actions .btn { width: auto; padding: 10px 16px; }
 .lan-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 18px 0; }
 .lan-steps { text-align: left; color: var(--muted); line-height: 1.7; margin: 18px auto; max-width: 480px; }
+/* Донат (банка Monobank) */
+.btn.btn-donate { width: auto; display: inline-block; padding: 10px 16px; background: #ff5f82; color: #fff; }
+.h-donate { margin-top: 18px; color: var(--muted); }
+.foot-donate { color: #ff5f82 !important; font-weight: 600; }

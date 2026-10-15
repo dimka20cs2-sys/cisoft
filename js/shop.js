@@ -39,6 +39,7 @@
       '<div id="shop-buttons" class="shop-buttons"><div class="shop-wait">Загружаю оплату…</div></div>' +
       '<p class="shop-note">Оплата картой или через PayPal. Ключ появится сразу после оплаты' +
       (CI.acc && CI.acc.user ? " и сохранится в вашем кабинете" : " — войдите в аккаунт, чтобы он сохранился в кабинете") + ".</p>" +
+      '<p class="shop-note"><a href="https://send.monobank.ua/jar/9qj3AaxzT8" target="_blank" rel="noopener">♥ Поддержать проект донатом</a> — без покупки, любая сумма.</p>' +
       '<details class="shop-recover"><summary>Потеряли ключ?</summary>' +
       '<form id="shop-recover-form"><input name="order" placeholder="Номер заказа из письма PayPal" required>' +
       '<input name="email" type="email" placeholder="Email, с которого платили" required>' +

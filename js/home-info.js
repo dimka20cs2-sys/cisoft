@@ -15,7 +15,8 @@
     return '<section class="h-sec h-pro">' + H.head("Pro — по желанию", "Все программы работают бесплатно. Pro открывает больше возможностей тем, кому они нужны.", "#/catalog?type=pro", "Pro-программы") +
       '<ol class="h-steps">' + steps.map(function (s) {
         return '<li><span class="h-step">' + s[0] + "</span><b>" + s[1] + "</b><p>" + s[2] + "</p></li>";
-      }).join("") + "</ol></section>";
+      }).join("") + "</ol>" +
+      '<p class="h-donate">Нравятся программы? <a class="btn btn-donate" href="https://send.monobank.ua/jar/9qj3AaxzT8" target="_blank" rel="noopener">♥ Поддержать проект</a> — любая сумма через Monobank.</p></section>';
   };
 
   B.why = function () {

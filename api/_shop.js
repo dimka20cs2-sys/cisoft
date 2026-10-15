@@ -24,6 +24,7 @@ const PRODUCTS = {
   "audio-converter": { name: "Audio Converter Pro", price: "1.99" },
   "image-converter": { name: "Image Converter Pro", price: "1.99" },
   "music-player": { name: "Music Player Pro", price: "1.99" },
+  "cisoft-vpn": { name: "CISOFT VPN Pro", price: "1.99" },
 };
 const CURRENCY = "USD";
 

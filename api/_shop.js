@@ -29,6 +29,11 @@ const PRODUCTS = {
   "mod-manager": { name: "ModNest Pro", price: "1.99" },
   "cleaner": { name: "Sweep Pro", price: "2.99" },
   "game-booster": { name: "TurboPlay Pro", price: "2.99" },
+  "lagzero": { name: "LagZero Pro", price: "2.99" },
+  "aimdot": { name: "AimDot Pro", price: "1.99" },
+  "playhub": { name: "PlayHub Pro", price: "1.99" },
+  "gametune": { name: "GameTune Pro", price: "2.99" },
+  "senskit": { name: "SensKit Pro", price: "1.99" },
 };
 const CURRENCY = "USD";
 

@@ -20,6 +20,10 @@ const PRODUCTS = {
   "phone-info": { name: "Phone Info Pro", price: "0.99" },
   "net-tools": { name: "Net Tools Pro", price: "0.99" },
   "mc-server-status": { name: "MC Server Status Pro", price: "0.99" },
+  "screen-recorder": { name: "Screen Recorder Pro", price: "2.99" },
+  "audio-converter": { name: "Audio Converter Pro", price: "1.99" },
+  "image-converter": { name: "Image Converter Pro", price: "1.99" },
+  "music-player": { name: "Music Player Pro", price: "1.99" },
 };
 const CURRENCY = "USD";
 

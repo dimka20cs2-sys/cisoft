@@ -1,6 +1,6 @@
 {
-  "name": "CISOFT Messenger",
-  "short_name": "CISOFT",
+  "name": "Pingo",
+  "short_name": "Pingo",
   "description": "Сообщения, фото, аудио- и видеозвонки",
   "lang": "ru",
   "start_url": "./",

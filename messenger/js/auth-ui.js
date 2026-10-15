@@ -17,7 +17,7 @@ function card(...content) {
   r.append(el('div', { class: 'auth-card' },
     el('div', { class: 'auth-brand' },
       el('img', { src: 'icons/icon-192.png', alt: '' }),
-      el('div', {}, el('h1', { text: 'CISOFT Messenger' }), el('div', { class: 'muted', text: 'Сообщения и звонки' }))),
+      el('div', {}, el('h1', { text: 'Pingo' }), el('div', { class: 'muted', text: 'Сообщения и звонки' }))),
     warn, ...content));
   r.hidden = false;
 }

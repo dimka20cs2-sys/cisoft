@@ -94,7 +94,7 @@
     var list = sorted().filter(function (it) {
       if (state.type !== "all" && it.type !== state.type) return false;
       if (!q) return true;
-      return [it.name, it.short, (it.tags || []).join(" ")].join(" ").toLowerCase().indexOf(q) >= 0;
+      return [it.name, it.alias || "", it.short, (it.tags || []).join(" ")].join(" ").toLowerCase().indexOf(q) >= 0;
     });
     if (!list.length) { g.innerHTML = '<div class="grid"><div class="empty">Ничего не найдено</div></div>'; return; }
     if (state.type !== "all") {

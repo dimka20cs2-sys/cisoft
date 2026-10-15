@@ -38,7 +38,7 @@
     if (frame) return frame;
     frame = document.createElement("iframe");
     frame.src = "messenger/";
-    frame.title = "CISOFT Messenger";
+    frame.title = "Pingo";
     frame.setAttribute("allow", ALLOW);
     frame.setAttribute("allowfullscreen", "");
     body.appendChild(frame);

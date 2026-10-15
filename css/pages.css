@@ -94,7 +94,7 @@
 @keyframes toast-in { from { opacity: 0; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
 
-/* Приглашение в сеть CISOFT LAN (#/lan/<id>) */
+/* Приглашение в сеть SquadLAN (#/lan/<id>) */
 .lan-invite { max-width: 640px; margin: 40px auto; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px; text-align: center; }
 .lan-invite .lan-icon { width: 88px; height: 88px; border-radius: 20px; }
 .lan-invite h1 { font-size: 26px; margin: 14px 0 10px; }

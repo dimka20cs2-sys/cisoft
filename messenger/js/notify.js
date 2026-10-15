@@ -4,7 +4,7 @@ import { playMessageSound } from './sound.js';
 import { chatTitle } from './chatlist.js';
 import { displayName } from './users.js';
 
-const BASE_TITLE = 'CISOFT Messenger';
+const BASE_TITLE = 'Pingo';
 
 // Сообщение для программы-обёртки (WebView2); в браузере просто пропускаем
 export function postToHost(msg) {

@@ -1,4 +1,4 @@
-// Настройки CISOFT Messenger.
+// Настройки Pingo.
 // 1) Вставьте сюда конфиг веб-приложения из консоли Firebase
 //    (Project settings → General → Your apps → Web app → SDK setup and configuration → Config).
 export const firebaseConfig = {

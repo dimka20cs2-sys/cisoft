@@ -1,4 +1,4 @@
-// Главная: витрины (Video Editor, игра с друзьями, Minecraft, игры, мессенджер). Данные — из ITEMS и CI.GAMES.
+// Главная: витрины (FrameCut, игра с друзьями, Minecraft, игры, мессенджер). Данные — из ITEMS и CI.GAMES.
 (function () {
   var CI = window.CI, esc = CI.esc, H = CI.home;
   var B = CI.homeBlocks = CI.homeBlocks || {};
@@ -50,7 +50,7 @@
   function messenger() {
     var it = H.it("messenger");
     return '<section class="h-show h-msgr">' +
-      '<div class="h-show-text"><span class="h-tag">Общение</span><h2>Мессенджер ' + esc(CI.SITE.name || "") + "</h2><p>" + esc(it.short) + "</p>" +
+      '<div class="h-show-text"><span class="h-tag">Общение</span><h2>Мессенджер ' + esc(it.name) + "</h2><p>" + esc(it.short) + "</p>" +
       li(["Работает прямо на сайте — ничего не нужно ставить", "Один аккаунт в браузере, на Windows и Android", "Видео- и аудиозвонки, группы до 50 человек"]) +
       '<div class="h-cta"><a class="h-btn" href="#/messenger">Открыть мессенджер</a><a class="h-btn h-btn2" href="' + link("messenger") + '">Скачать приложение</a></div></div>' +
       '<a class="h-show-img" href="#/messenger" tabindex="-1" aria-hidden="true"><img src="img/messenger/desktop.png" alt="" loading="lazy"></a></section>';

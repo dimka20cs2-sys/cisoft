@@ -4,13 +4,13 @@
 
   CI.renderItem = function (id) {
     var app = CI.app, it = CI.byId(id);
-    if (!it) { app.innerHTML = '<a class="back" href="#/">← Каталог</a><div class="empty">Публикация не найдена</div>'; return; }
+    if (!it) { app.innerHTML = '<a class="back" href="#/catalog">← Каталог</a><div class="empty">Публикация не найдена</div>'; return; }
     document.title = it.name + " — " + (CI.SITE.name || "");
     var shots = it.screenshots || [];
     var eid = esc(it.id);
 
     var html =
-      '<a class="back" href="#/">← Каталог</a>' +
+      '<a class="back" href="#/catalog">← Каталог</a>' +
       '<div class="item-head">' + CI.icon(it, true) +
         "<div>" + CI.badge(it.type) + (it.product ? '<span class="pro-badge">PRO</span>' : '') + (CI.isNew(it) ? '<span class="new-tag">Новое</span>' : "") +
         "<h1>" + esc(it.name) + "</h1><p>" + esc(it.short) + "</p></div></div>" +

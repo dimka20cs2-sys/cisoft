@@ -1,18 +1,21 @@
-// Маршрутизация по хэшу: #/ — каталог, #/item/<id>, #/news, #/faq, #/messenger, #/account.
+// Маршрутизация по хэшу: #/ — главная, #/catalog[?type=…&q=…], #/item/<id>, #/news, #/faq, #/messenger, #/account.
 (function () {
   var CI = window.CI, prev = null;
 
   function route() {
     var h = location.hash || "#/";
+    // Старые закладки каталога: #/?type=media → #/catalog?type=media
+    if (/^#\/?\?/.test(h)) { location.replace("#/catalog" + h.slice(h.indexOf("?"))); return; }
     var m = h.match(/^#\/item\/(.+)$/);
     var gm = h.match(/^#\/games(?:\/([\w-]+))?$/);
     var lm = h.match(/^#\/lan\/([\w-]*)$/);
-    var name = m ? "item" : gm ? "games" : lm ? "lan" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
+    var cm = h.match(/^#\/catalog\/?(?:\?(.*))?$/);
+    var name = m ? "item" : cm ? "catalog" : gm ? "games" : lm ? "lan" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
     var isMsgr = name === "messenger";
 
     document.body.classList.toggle("is-msgr", isMsgr);
     document.body.setAttribute("data-route", name);
-    CI.setActiveNav(name === "item" ? "home" : name);
+    CI.setActiveNav(name === "item" ? "catalog" : name);
     CI.msgr.setPage(isMsgr);
 
     if (isMsgr) {
@@ -22,6 +25,8 @@
       var id;
       try { id = decodeURIComponent(m[1]); } catch (e) { id = m[1]; }
       CI.renderItem(id);
+    } else if (name === "catalog") {
+      CI.renderCatalog(cm[1] || "");
     } else if (name === "lan") {
       CI.renderLanInvite(lm[1]);
     } else if (name === "games") {

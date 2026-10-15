@@ -1,4 +1,4 @@
-// Главная: герой, фильтры по типам, сортировка, поиск, карточки.
+// #/catalog[?type=…&q=…&sort=…] — каталог: фильтры по типам, сортировка, поиск, карточки.
 (function () {
   var CI = window.CI, esc = CI.esc;
   var SORTS = [["new", "Новые"], ["popular", "Популярные"], ["az", "А–Я"]];
@@ -15,8 +15,29 @@
     return arr.map(function (x) { return x.it; });
   }
 
-  CI.renderHome = function () {
-    document.title = CI.SITE.name || "Каталог";
+  // Параметры из адреса: #/catalog?type=media&q=видео&sort=az
+  function fromQuery(qs) {
+    var p = {};
+    String(qs || "").split("&").forEach(function (kv) {
+      var i = kv.indexOf("="); if (i < 1) return;
+      try { p[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")); } catch (e) {}
+    });
+    state.type = p.type && (CI.TYPES[p.type] || CI.ITEMS.some(function (it) { return it.type === p.type; })) ? p.type : "all";
+    state.q = p.q || "";
+    if (p.sort && SORTS.some(function (s) { return s[0] === p.sort; })) state.sort = p.sort;
+  }
+  // Записать фильтр в адрес без перерисовки (replaceState не вызывает hashchange)
+  function toHash() {
+    var p = [];
+    if (state.type !== "all") p.push("type=" + encodeURIComponent(state.type));
+    if (state.q.trim()) p.push("q=" + encodeURIComponent(state.q.trim()));
+    var h = "#/catalog" + (p.length ? "?" + p.join("&") : "");
+    if (location.hash !== h && history.replaceState) try { history.replaceState(null, "", h); } catch (e) {}
+  }
+
+  CI.renderCatalog = function (qs) {
+    fromQuery(qs);
+    document.title = "Каталог программ — " + (CI.SITE.name || "");
     var counts = {};
     CI.ITEMS.forEach(function (it) { counts[it.type] = (counts[it.type] || 0) + 1; });
     var chips = '<button type="button" class="chip' + (state.type === "all" ? " on" : "") + '" data-type="all">Всё<b>' + CI.ITEMS.length + "</b></button>";
@@ -28,7 +49,7 @@
     }).join("");
 
     CI.app.innerHTML =
-      '<section class="hero"><h1>Софт от <span>' + esc(CI.SITE.name || "Каталог") + "</span></h1>" +
+      '<section class="hero"><h1>Каталог <span>' + esc(CI.SITE.name || "") + "</span></h1>" +
       "<p>" + esc(CI.SITE.tagline || "") + "</p>" +
       '<div class="hero-total" id="hero-total">' + CI.heroLine() + "</div></section>" +
       '<div class="tools">' + chips + "</div>" +
@@ -40,6 +61,7 @@
       b.onclick = function () {
         state.type = b.dataset.type;
         CI.app.querySelectorAll(".chip").forEach(function (x) { x.classList.toggle("on", x === b); });
+        toHash();
         renderGrid();
       };
     });
@@ -54,14 +76,14 @@
       };
     });
     var s = document.getElementById("search");
-    s.oninput = function () { state.q = s.value; renderGrid(); };
+    s.oninput = function () { state.q = s.value; toHash(); renderGrid(); };
     renderGrid();
   };
 
   CI.clearSearch = function () {
     var s = document.getElementById("search");
     if (!s || !s.value) return false;
-    s.value = ""; state.q = ""; renderGrid();
+    s.value = ""; state.q = ""; toHash(); renderGrid();
     return true;
   };
 
@@ -93,6 +115,7 @@
     CI.reveal(g);
   }
   CI.renderGrid = renderGrid;
+  CI.card = card;
 
   function card(it) {
     var id = esc(it.id);

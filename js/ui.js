@@ -77,7 +77,7 @@
       var s = document.getElementById("search");
       if (s) { s.focus(); s.select(); return; }
       CI.focusSearchAfterRoute = true;
-      location.hash = "#/";
+      location.hash = "#/catalog";
     } else if (e.key === "Escape") {
       if (CI.msgr && CI.msgr.isOpen()) { CI.msgr.close(); return; }
       if (document.activeElement && document.activeElement.id === "search") {

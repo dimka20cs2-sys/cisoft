@@ -1,0 +1,133 @@
+/* Главная: витрины, Minecraft, игры, Pro, «Почему», обновления, FAQ, финальный призыв */
+.h-show {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 44px; align-items: center;
+  margin-top: 72px; padding: 40px; border-radius: 24px; border: 1px solid var(--line);
+  background:
+    radial-gradient(500px 300px at 100% 0%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 70%),
+    var(--card);
+}
+.h-show.h-rev { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
+.h-show.h-rev .h-show-img { order: -1; }
+.h-show.h-msgr { background: radial-gradient(500px 300px at 0% 100%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%), var(--card); }
+.h-show h2 { font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; letter-spacing: -.6px; margin: 12px 0 10px; }
+.h-show-text > p { color: var(--muted); margin: 0; font-size: 15.5px; }
+.h-tag {
+  display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; padding: 3px 11px; border-radius: 99px;
+  color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, transparent);
+}
+.h-checks { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 9px; }
+.h-checks li { position: relative; padding-left: 30px; font-size: 15px; }
+.h-checks li::before {
+  content: "✓"; position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+}
+.h-show-img { display: block; border-radius: 14px; overflow: hidden; border: 1px solid var(--line2); box-shadow: var(--shadow); background: var(--card2); }
+.h-show-img img { width: 100%; transition: transform .4s; }
+.h-show-img:hover img { transform: scale(1.02); }
+
+/* мини-карточки программ (LAN/VPN, Minecraft) */
+.h-minis { display: grid; gap: 12px; margin-top: 22px; }
+.h-mini {
+  display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; color: var(--text);
+  background: var(--bg2); border: 1px solid var(--line); transition: border-color .15s, transform .15s;
+}
+.h-mini:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-2px); }
+.h-mini span { display: flex; flex-direction: column; min-width: 0; }
+.h-mini b { font-size: 15.5px; }
+.h-mini small { color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+.h-mc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.h-mc .h-mini { background: var(--card); padding: 18px; align-items: flex-start; }
+
+/* игры */
+.h-games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.h-game {
+  display: flex; flex-direction: column; gap: 4px; color: var(--text); padding: 10px 10px 16px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px; transition: transform .15s, border-color .15s;
+}
+.h-game:hover { text-decoration: none; transform: translateY(-3px); border-color: var(--gc, var(--accent)); }
+.h-cover { position: relative; display: block; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; margin-bottom: 8px; background: var(--card2); }
+.h-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.h-game:hover .h-cover img { transform: scale(1.05); }
+.h-cover em {
+  position: absolute; left: 12px; bottom: 12px; font-style: normal; font-weight: 700; font-size: 13.5px; color: #fff;
+  padding: 6px 14px; border-radius: 99px; background: rgba(10, 12, 20, .65); backdrop-filter: blur(6px);
+}
+.h-game b, .h-game small { padding: 0 6px; }
+.h-game b { font-size: 17px; }
+.h-game small { color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+
+/* Pro: шаги */
+.h-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; counter-reset: s; }
+.h-steps li { position: relative; padding: 22px 20px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+.h-steps li:not(:last-child)::after {
+  content: ""; position: absolute; top: 40px; right: -14px; width: 14px; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: .6;
+}
+.h-step {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; margin-bottom: 14px;
+  font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2));
+}
+.h-steps b { font-size: 16px; }
+.h-steps p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+
+/* Почему CISOFT */
+.h-why { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.h-why > div { padding: 20px 18px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+.h-why-i {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; font-size: 22px; margin-bottom: 12px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--card2));
+}
+.h-why b { font-size: 15.5px; }
+.h-why p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+
+/* последние обновления */
+.h-upd { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.h-upd-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; color: var(--text); }
+.h-upd-row + .h-upd-row { border-top: 1px solid var(--line); }
+.h-upd-row:hover { text-decoration: none; background: var(--card2); }
+.h-upd-row .icon { width: 42px; height: 42px; border-radius: 11px; }
+.h-upd-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.h-upd-body em { font-style: normal; font-weight: 600; font-size: 12.5px; color: var(--accent); margin-left: 4px; }
+.h-upd-body small { color: var(--muted); font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-upd-row time { color: var(--muted); font-size: 13px; flex: none; }
+
+/* FAQ */
+.h-faq .faq { max-width: none; padding-bottom: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; align-items: start; }
+
+/* финальный призыв */
+.h-final {
+  position: relative; isolation: isolate; overflow: hidden; text-align: center; margin: 80px 0 30px; padding: 56px 24px;
+  border-radius: 26px; border: 1px solid var(--line2); background: var(--card);
+}
+.h-final .h-bg { inset: 0; }
+.h-final h2 { font-size: clamp(26px, 3.6vw, 38px); letter-spacing: -.6px; margin: 0 0 10px; line-height: 1.15; }
+.h-final p { color: var(--muted); margin: 0 auto; max-width: 520px; font-size: 16px; }
+.h-final .h-cta { justify-content: center; }
+
+@media (max-width: 1000px) {
+  .h-why { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .h-why > div { grid-column: span 2; }
+  .h-why > div:nth-child(n+4) { grid-column: span 3; }
+  .h-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .h-steps li::after { display: none; }
+}
+@media (max-width: 860px) {
+  .h-show, .h-show.h-rev { grid-template-columns: minmax(0, 1fr); padding: 26px; gap: 26px; }
+  .h-show .h-show-img, .h-show.h-rev .h-show-img { order: 0; }
+  .h-games { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .h-faq .faq { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .h-show { margin-top: 56px; padding: 20px; border-radius: 20px; }
+  .h-mc-grid { grid-template-columns: minmax(0, 1fr); }
+  .h-steps { gap: 10px; }
+  .h-steps li { padding: 16px 14px; }
+  .h-why > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .h-why { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .h-why > div { padding: 16px 14px; grid-column: auto; }
+  .h-why > div:nth-child(n+4) { grid-column: auto; }
+  .h-upd-row { padding: 12px 14px; }
+  .h-upd-row time { display: none; }
+  .h-final { padding: 40px 18px; margin-top: 60px; }
+}

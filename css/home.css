@@ -1,0 +1,133 @@
+/* Главная (#/): герой, цифры, заголовки секций, разделы. Витрины и прочее — css/home-blocks.css */
+.home { padding-bottom: 40px; }
+.h-sec { margin: 72px 0 0; }
+.h-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 22px; }
+.h-head h2 { margin: 0; font-size: clamp(24px, 3.2vw, 32px); line-height: 1.2; letter-spacing: -.4px; }
+.h-head p { margin: 6px 0 0; color: var(--muted); font-size: 15.5px; max-width: 640px; }
+.h-more { font-weight: 600; font-size: 14.5px; white-space: nowrap; }
+
+/* кнопки лендинга */
+.h-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.h-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 22px; border-radius: 12px; font-weight: 700; font-size: 15.5px; color: #fff;
+  background: linear-gradient(135deg, #2569d0, #6a4ff0);
+  box-shadow: 0 8px 24px color-mix(in srgb, #4f6dff 35%, transparent);
+  transition: transform .15s, filter .15s, box-shadow .15s;
+}
+.h-btn:hover { text-decoration: none; filter: brightness(1.08); transform: translateY(-1px); }
+.h-btn2 { background: var(--card); color: var(--text); border: 1px solid var(--line2); box-shadow: none; }
+.h-btn2:hover { border-color: var(--accent); }
+
+/* ── герой ── */
+.h-hero {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: 40px; align-items: center; padding: 64px 0 40px; isolation: isolate;
+}
+.h-bg {
+  position: absolute; inset: 0 calc(50% - 50vw); z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(600px 340px at 72% 40%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 70%),
+    radial-gradient(520px 320px at 30% 20%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%);
+}
+.h-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 44px 44px; background-position: center top; opacity: .45;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 20%, transparent 75%);
+}
+.h-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px; padding: 5px 13px; border-radius: 99px;
+  font-size: 13px; font-weight: 600; color: var(--text);
+  background: color-mix(in srgb, var(--card) 80%, transparent); border: 1px solid var(--line);
+}
+.h-eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px color-mix(in srgb, var(--good) 22%, transparent); }
+.h-hero h1 { font-size: clamp(32px, 4.6vw, 54px); line-height: 1.08; letter-spacing: -1.2px; margin: 18px 0 16px; }
+.h-grad { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.h-hero-text > p { color: var(--muted); font-size: 18px; line-height: 1.55; margin: 0; max-width: 560px; }
+
+/* коллаж */
+.h-collage { position: relative; aspect-ratio: 1.15; max-width: 540px; width: 100%; justify-self: end; }
+.h-shot {
+  position: absolute; left: 6%; right: 4%; top: 14%; border-radius: 14px; overflow: hidden;
+  background: var(--card); border: 1px solid var(--line2); box-shadow: var(--shadow); transform: rotate(-2deg);
+}
+.h-dots { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: var(--card2); font-size: 12px; color: var(--muted); }
+.h-dots i { width: 9px; height: 9px; border-radius: 50%; background: #ff5f57; }
+.h-dots i:nth-child(2) { background: #febc2e; } .h-dots i:nth-child(3) { background: #28c840; }
+.h-dots span { margin-left: 8px; font-weight: 600; }
+.h-shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+.h-float {
+  position: absolute; width: 19%; aspect-ratio: 1; border-radius: 22%; object-fit: cover;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .35), 0 0 0 1px color-mix(in srgb, var(--text) 10%, transparent);
+  background: var(--card2);
+}
+.h-float.f1 { left: 0; top: 0; } .h-float.f2 { right: 0; top: 3%; width: 16%; }
+.h-float.f3 { left: 2%; bottom: 4%; width: 16%; } .h-float.f4 { right: 8%; bottom: 0; }
+.h-new {
+  position: absolute; left: 22%; bottom: 6%; display: flex; gap: 8px; align-items: center; padding: 8px 14px;
+  border-radius: 99px; font-size: 13px; color: var(--text); background: var(--card); border: 1px solid var(--line2); box-shadow: var(--shadow);
+}
+.h-new b { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; padding: 1px 8px; border-radius: 99px; font-size: 11.5px; }
+.h-new:hover { text-decoration: none; border-color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .h-float { animation: h-bob 6s ease-in-out infinite; }
+  .h-float.f2 { animation-delay: -1.5s; } .h-float.f3 { animation-delay: -3s; } .h-float.f4 { animation-delay: -4.5s; }
+  .h-shot { animation: h-in .7s ease-out both; }
+}
+@keyframes h-bob { 50% { transform: translateY(-10px); } }
+@keyframes h-in { from { opacity: 0; transform: rotate(-2deg) translateY(16px); } }
+
+/* ── цифры ── */
+.h-nums {
+  display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+}
+.h-nums > div { padding: 22px 24px; display: flex; flex-direction: column; gap: 2px; }
+.h-nums > div + div { border-left: 1px solid var(--line); }
+.h-nums b { font-size: clamp(26px, 3.4vw, 36px); line-height: 1.1; font-weight: 800; letter-spacing: -.5px; }
+.h-nums span { color: var(--muted); font-size: 14px; }
+
+/* ── популярное ── */
+.h-grid { padding-bottom: 0; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+/* ── разделы ── */
+.h-types { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .h-types { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.h-type {
+  position: relative; display: flex; flex-direction: column; gap: 2px; padding: 18px 18px 16px; min-height: 150px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px; color: var(--text); overflow: hidden;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+}
+.h-type::before {
+  content: ""; position: absolute; inset: auto -30% -60% auto; width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+}
+.h-type:hover { text-decoration: none; transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 28px color-mix(in srgb, var(--accent) 16%, transparent); }
+.h-emoji { font-size: 28px; line-height: 1; margin-bottom: 10px; }
+.h-type b { font-size: 16.5px; }
+.h-type small { color: var(--muted); font-size: 13.5px; }
+.h-stack { display: flex; margin-top: auto; padding-top: 12px; }
+.h-stack img { width: 30px; height: 30px; border-radius: 8px; object-fit: cover; box-shadow: 0 0 0 2px var(--card); background: var(--card2); }
+.h-stack img + img { margin-left: -6px; }
+
+@media (max-width: 900px) {
+  .h-hero { grid-template-columns: minmax(0, 1fr); padding-top: 40px; gap: 34px; }
+  .h-collage { justify-self: center; max-width: 460px; }
+  .h-nums { grid-template-columns: repeat(2, 1fr); }
+  .h-nums > div:nth-child(3) { border-left: 0; }
+  .h-nums > div:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 560px) {
+  .h-sec { margin-top: 56px; }
+  .h-hero { padding-top: 28px; }
+  .h-hero-text > p { font-size: 16px; }
+  .h-cta .h-btn { flex: 1 1 100%; }
+  .h-nums > div { padding: 16px 18px; }
+  .h-types { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .h-type { min-height: 136px; padding: 14px; }
+  .h-new { left: 18%; font-size: 12px; }
+}
+
+html:has(body[data-route="home"]), body[data-route="home"] { overflow-x: clip; }

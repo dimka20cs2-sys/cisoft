@@ -27,6 +27,8 @@ const PRODUCTS = {
   "cisoft-vpn": { name: "CISOFT VPN Pro", price: "1.99" },
   "cisoft-lan": { name: "CISOFT LAN Pro", price: "2.99" },
   "mod-manager": { name: "MC Mod Manager Pro", price: "1.99" },
+  "cleaner": { name: "CISOFT Cleaner Pro", price: "2.99" },
+  "game-booster": { name: "Game Booster Pro", price: "2.99" },
 };
 const CURRENCY = "USD";
 

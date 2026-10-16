@@ -54,6 +54,10 @@ const PRODUCTS = {
   "crafthost": { name: "CraftHost Pro", price: "2.99" },
   "gifforge": { name: "GifForge Pro", price: "1.99" },
   "voicenote": { name: "VoiceNote Pro", price: "1.99" },
+  "powermode": { name: "PowerMode Pro", price: "1.99" },
+  "updatecheck": { name: "UpdateCheck Pro", price: "1.99" },
+  "snapback": { name: "SnapBack Pro", price: "1.99" },
+  "shelltune": { name: "ShellTune Pro", price: "1.99" },
 };
 const CURRENCY = "USD";
 

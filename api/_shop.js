@@ -58,6 +58,22 @@ const PRODUCTS = {
   "updatecheck": { name: "UpdateCheck Pro", price: "1.99" },
   "snapback": { name: "SnapBack Pro", price: "1.99" },
   "shelltune": { name: "ShellTune Pro", price: "1.99" },
+  "userguard": { name: "UserGuard Pro", price: "1.99" },
+  "freeloot": { name: "FreeLoot Pro", price: "0.99" },
+  "cryptbox": { name: "CryptBox Pro", price: "2.99" },
+  "qrbridge": { name: "QRBridge Pro", price: "0.99" },
+  "emojipad": { name: "EmojiPad Pro", price: "0.99" },
+  "statuscraft": { name: "StatusCraft Pro", price: "1.99" },
+  "proxyjump": { name: "ProxyJump Pro", price: "1.99" },
+  "wifivault": { name: "WiFiVault Pro", price: "1.99" },
+  "subtitler": { name: "SubTitler Pro", price: "1.99" },
+  "syncbox": { name: "SyncBox Pro", price: "1.99" },
+  "talklan": { name: "TalkLAN Pro", price: "1.99" },
+  "textstyler": { name: "TextStyler Pro", price: "0.99" },
+  "streamchat": { name: "StreamChat Pro", price: "1.99" },
+  "leaktest": { name: "LeakTest Pro", price: "0.99" },
+  "adshield": { name: "AdShield Pro", price: "1.99" },
+  "pixa": { name: "Pixa Pro", price: "0.99" },
 };
 const CURRENCY = "USD";
 

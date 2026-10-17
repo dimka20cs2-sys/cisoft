@@ -74,6 +74,8 @@ const PRODUCTS = {
   "leaktest": { name: "LeakTest Pro", price: "0.99" },
   "adshield": { name: "AdShield Pro", price: "1.99" },
   "pixa": { name: "Pixa Pro", price: "0.99" },
+  "driverhunt": { name: "DriverHunt Pro", price: "1.99" },
+  "tunnelbox": { name: "TunnelBox Pro", price: "1.99" },
 };
 const CURRENCY = "USD";
 

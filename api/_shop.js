@@ -19,6 +19,10 @@ const PRODUCTS = {
   "log-analyzer": { name: "LogLens Pro", price: "1.99" },
   "phone-info": { name: "Inside Pro", price: "0.99" },
   "net-tools": { name: "NetKit Pro", price: "0.99" },
+  "wordup": { name: "WordUp Pro", price: "0.99" },
+  "chargeguard": { name: "ChargeGuard Pro", price: "0.99" },
+  "levelup": { name: "LevelUp Pro", price: "0.99" },
+  "decibel": { name: "Decibel Pro", price: "0.99" },
   "convertix": { name: "Convertix Pro", price: "0.99" },
   "notik": { name: "Notik Pro", price: "0.99" },
   "timekit": { name: "TimeKit Pro", price: "0.99" },
@@ -80,6 +84,8 @@ const PRODUCTS = {
   "pixa": { name: "Pixa Pro", price: "0.99" },
   "driverhunt": { name: "DriverHunt Pro", price: "1.99" },
   "tunnelbox": { name: "TunnelBox Pro", price: "1.99" },
+  "stickerlab": { name: "StickerLab Pro", price: "1.99" },
+  "lumo": { name: "Lumo Pro", price: "1.99" },
 };
 const CURRENCY = "USD";
 

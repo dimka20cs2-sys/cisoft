@@ -47,10 +47,21 @@
       (b ? '<em class="game-best">Твой рекорд: ' + fmt(b) + " " + g.unit + "</em>" : "") + "</span></span></a>";
   }
 
+  function pcGames() { return CI.ITEMS.filter(function (it) { return it.type === "pcgames"; }); }
+  function pcCard(it) {
+    var cover = it.screenshots && it.screenshots[0] ? it.screenshots[0].src : it.icon;
+    return '<a class="game-card" href="#/item/' + esc(it.id) + '" style="--gc:#7c5cff">' +
+      '<span class="game-cover"><img src="' + esc(cover) + '" alt="" loading="lazy"><span class="game-play">⬇ Скачать</span></span>' +
+      '<span class="game-info"><img class="game-icon" src="' + esc(it.icon) + '" alt="">' +
+      "<span><b>" + esc(it.name) + "</b><small>" + esc(it.short) + "</small>" +
+      '<em class="game-best">Windows · v' + esc(it.version) + " · " + esc(it.size) + "</em></span></span></a>";
+  }
+
   CI.renderGames = function () {
     document.title = "Игры — " + (CI.SITE.name || "");
-    CI.app.innerHTML = '<section class="page-head"><h1>Игры</h1><p>Бесплатные игры прямо в браузере — на компьютере и на телефоне. Без установки и без рекламы.</p></section>' +
-      '<div class="games-grid">' + CI.GAMES.map(card).join("") + "</div>" +
+    CI.app.innerHTML = '<section class="page-head"><h1>Игры</h1><p>Игры CISOFT для Windows и бесплатные игры прямо в браузере — на компьютере и на телефоне.</p></section>' +
+      '<h2 class="games-h2">Игры для ПК</h2><p class="games-sub">Большие игры для Windows — скачайте и играйте. Скоро в Steam.</p><div class="games-grid">' + pcGames().map(pcCard).join("") + "</div>" +
+      '<h2 class="games-h2">Играть в браузере</h2><div class="games-grid">' + CI.GAMES.map(card).join("") + "</div>" +
       (CI.TOOLS.length ? '<h2 class="games-h2">Инструменты для Minecraft</h2><div class="games-grid">' + CI.TOOLS.map(card).join("") + "</div>" : "") +
       '<div id="games-top"></div>';
     if (CI.renderGamesTop) CI.renderGamesTop(document.getElementById("games-top"));

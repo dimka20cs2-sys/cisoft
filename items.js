@@ -20,11 +20,12 @@ window.TYPES = {
   pro:     "Pro-программы",
   system:  "Система",
   admin:   "Сисадмину",
-  games:   "Игры",
+  games:   "Для игр",
   social:  "Общение",
   vpn:     "VPN",
   media:   "Мультимедиа",
   android: "Android",
+  pcgames: "Игры для ПК",
 }
 
 window.ITEMS = [
@@ -3963,7 +3964,7 @@ window.ITEMS = [
 
   {
     id: "pixel-bastion",
-    type: "games",
+    type: "pcgames",
     name: "Pixel Bastion",
     short: "Tower defense в тёплом пиксель-арте: 18 уровней в 6 мирах, 8 башен с ветками, погода и ночь, Командир, испытания и Арена.",
     icon: "img/pixel-bastion/icon.png",
@@ -4073,7 +4074,7 @@ window.ITEMS = [
 
   {
     id: "deep-drill",
-    type: "games",
+    type: "pcgames",
     name: "Deep Drill",
     short: "Инкрементальная игра про бур: 10 слоёв планеты до Сингулярности, буровые головки, дроны-специалисты, два престижа, задания, мини-игры и музей находок.",
     icon: "img/deep-drill/icon.png",
@@ -4183,7 +4184,7 @@ window.ITEMS = [
 
   {
     id: "voidswarm",
-    type: "games",
+    type: "pcgames",
     name: "VoidSwarm",
     short: "Неоновая «выживалка» в 3D в духе Vampire Survivors: тысячи врагов, 18 оружий с эволюциями, 6 пилотов, 4 сектора, реликвии, мутаторы и ежедневные забеги.",
     icon: "img/voidswarm/icon.png",

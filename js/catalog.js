@@ -7,8 +7,9 @@
 
   function score(it) { var s = CI.st(it.id); return (s.downloads || 0) + (s.likes || 0); }
   function byDate(a, b) { return String(b.it.date || "").localeCompare(String(a.it.date || "")) || a.i - b.i; }
+  function items() { return CI.ITEMS.filter(function (it) { return it.type !== "pcgames"; }); }
   function sorted() {
-    var arr = CI.ITEMS.map(function (it, i) { return { it: it, i: i }; });
+    var arr = items().map(function (it, i) { return { it: it, i: i }; });
     if (state.sort === "az") arr.sort(function (a, b) { return String(a.it.name).localeCompare(String(b.it.name), "ru", { sensitivity: "base" }); });
     else if (state.sort === "popular") arr.sort(function (a, b) { return score(b.it) - score(a.it) || byDate(a, b); });
     else arr.sort(byDate);
@@ -39,8 +40,8 @@
     fromQuery(qs);
     document.title = "Каталог программ — " + (CI.SITE.name || "");
     var counts = {};
-    CI.ITEMS.forEach(function (it) { counts[it.type] = (counts[it.type] || 0) + 1; });
-    var chips = '<button type="button" class="chip' + (state.type === "all" ? " on" : "") + '" data-type="all">Всё<b>' + CI.ITEMS.length + "</b></button>";
+    items().forEach(function (it) { counts[it.type] = (counts[it.type] || 0) + 1; });
+    var chips = '<button type="button" class="chip' + (state.type === "all" ? " on" : "") + '" data-type="all">Всё<b>' + items().length + "</b></button>";
     Object.keys(CI.TYPES).forEach(function (t) {
       if (counts[t]) chips += '<button type="button" class="chip' + (state.type === t ? " on" : "") + '" data-type="' + esc(t) + '">' + esc(CI.TYPES[t]) + "<b>" + counts[t] + "</b></button>";
     });

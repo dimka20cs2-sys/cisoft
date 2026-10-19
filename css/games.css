@@ -60,3 +60,5 @@
 body:has(.game-page) .fab { display: none; }
 
 .games-h2 { font-size: 22px; margin: 8px 0 14px; }
+
+.games-sub { color: var(--muted); margin: -6px 0 14px; }

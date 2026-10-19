@@ -12,7 +12,7 @@
   };
   H.counts = function () {
     var c = {};
-    CI.ITEMS.forEach(function (it) { c[it.type] = (c[it.type] || 0) + 1; });
+    CI.ITEMS.forEach(function (it) { if (it.type !== "pcgames") c[it.type] = (c[it.type] || 0) + 1; });
     return c;
   };
 

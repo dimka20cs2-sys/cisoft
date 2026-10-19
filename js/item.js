@@ -89,6 +89,7 @@
   // Одна кнопка «Скачать» или несколько (it.downloads: [{label, file|link, size}]).
   // Для нескольких — подсвечиваем вариант под систему пользователя.
   function dlButtons(it) {
+    if (it.nodl) return '<a class="btn btn2" href="#/catalog">Все программы CISOFT →</a>';
     if (!it.downloads || !it.downloads.length) {
       var href = it.file || it.link || "#";
       var lbl = it.product ? 'Скачать бесплатную версию' : 'Скачать';

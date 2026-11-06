@@ -1,0 +1,30 @@
+/* #/minecraft — «Плюшки для майна». ВРЕМЕННОЕ оформление: его заменит дизайн в стиле Minecraft от Gemini. */
+.mc-page { padding-bottom: 40px; }
+.mc-hero { display: flex; align-items: center; gap: 24px; margin: 28px 0 32px; padding: 32px; border-radius: 18px;
+  background: linear-gradient(180deg, #5d9b3c 0 14%, #7a5536 14% 100%); color: #fff; }
+.mc-hero-text { flex: 1; }
+.mc-hero h1 { margin: 10px 0 8px; font-size: clamp(28px, 4vw, 44px); text-shadow: 3px 3px 0 #3a2a1a; }
+.mc-hero p { margin: 0; max-width: 620px; opacity: .92; }
+.mc-tag { display: inline-block; padding: 4px 10px; background: #3a2a1a; font-weight: 700; font-size: 13px; }
+.mc-hero-art { width: 160px; height: 160px; flex: none; background: #5d9b3c; box-shadow: inset 0 -110px 0 #7a5536; }
+.mc-sec { margin: 0 0 34px; }
+.mc-sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.mc-sec-head h2 { margin: 0; }
+.mc-sec-head p { margin: 2px 0 0; color: var(--muted); }
+.mc-block { width: 38px; height: 38px; flex: none; background: #7a5536; }
+.mc-block[data-block="grass"] { background: linear-gradient(#5d9b3c 0 30%, #7a5536 30%); }
+.mc-block[data-block="diamond"] { background: #2fd5c6; }
+.mc-block[data-block="crafting"] { background: #a0703f; }
+.mc-tool { display: flex; gap: 18px; align-items: center; padding: 16px; border-radius: 14px; background: var(--card, #161a2a); color: inherit; }
+.mc-tool:hover { text-decoration: none; }
+.mc-tool-img { width: 220px; max-width: 40%; border-radius: 10px; }
+.mc-tool-body h3 { margin: 0 0 6px; }
+.mc-tool-body p { margin: 0 0 12px; color: var(--muted); }
+.mc-btn { display: inline-block; padding: 8px 14px; background: #5d9b3c; color: #fff; font-weight: 700; }
+.mc-count { color: var(--muted); text-align: center; }
+@media (max-width: 640px) {
+  .mc-hero { flex-direction: column; padding: 22px; }
+  .mc-hero-art { width: 100px; height: 100px; }
+  .mc-tool { flex-direction: column; align-items: flex-start; }
+  .mc-tool-img { max-width: 100%; width: 100%; }
+}

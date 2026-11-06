@@ -10,7 +10,7 @@
     var gm = h.match(/^#\/games(?:\/([\w-]+))?$/);
     var lm = h.match(/^#\/lan\/([\w-]*)$/);
     var cm = h.match(/^#\/catalog\/?(?:\?(.*))?$/);
-    var name = m ? "item" : cm ? "catalog" : gm ? "games" : lm ? "lan" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
+    var name = m ? "item" : cm ? "catalog" : gm ? "games" : lm ? "lan" : h === "#/minecraft" ? "minecraft" : h === "#/news" ? "news" : h === "#/faq" ? "faq" : h === "#/messenger" ? "messenger" : h === "#/account" ? "account" : "home";
     var isMsgr = name === "messenger";
 
     document.body.classList.toggle("is-msgr", isMsgr);
@@ -31,7 +31,8 @@
       CI.renderLanInvite(lm[1]);
     } else if (name === "games") {
       if (gm[1]) CI.renderGame(gm[1]); else CI.renderGames();
-    } else if (name === "news") CI.renderNews();
+    } else if (name === "minecraft") CI.renderMinecraft();
+    else if (name === "news") CI.renderNews();
     else if (name === "faq") CI.renderFaq();
     else if (name === "account") {
       // модуль кабинета (js/account.js) грузится отложенно — он сам дорисует страницу

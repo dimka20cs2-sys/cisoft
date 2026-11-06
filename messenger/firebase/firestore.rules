@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Правила безопасности CISOFT Messenger.
+// Правила безопасности AkeeTech Messenger.
 // Публикация: Firebase Console → Firestore Database → Rules → вставить этот файл → Publish.
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -242,7 +242,7 @@ service cloud.firestore {
       allow delete: if signedIn() && userId == me();
     }
 
-    // ---------- CISOFT LAN: виртуальные сети ----------
+    // ---------- AkeeTech LAN: виртуальные сети ----------
     // lannets/{netId} — { name, ownerId, createdAt, maxMembers, pro, open }
     // lannets/{netId}/secret/pass — { hash } (sha256(netId + ":" + пароль)); не читается никем
     // lannets/{netId}/members/{uid} — запись участника (вступить можно только с верным proof)

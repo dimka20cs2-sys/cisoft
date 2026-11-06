@@ -127,7 +127,7 @@ window.J = window.J || {};
     J.store.set('games', s.games);
   };
 
-  // сообщение родительской странице (сайт CISOFT)
+  // сообщение родительской странице (сайт AkeeTech)
   J.notifyParent = function (event, score) {
     try {
       if (window.parent && window.parent !== window) {

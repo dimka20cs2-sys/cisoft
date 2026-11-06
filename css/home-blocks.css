@@ -123,7 +123,7 @@
 .h-steps b { font-size: 16.5px; font-weight: 700; letter-spacing: -.2px; }
 .h-steps p { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
 
-/* Почему CISOFT */
+/* Почему AkeeTech */
 .h-why { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
 .h-why > div {
   padding: 22px 20px; border-radius: 18px;

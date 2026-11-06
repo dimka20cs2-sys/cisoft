@@ -12,7 +12,7 @@ module.exports = handler(async (req, res) => {
       description: info.name + " — лицензия",
       amount: { currency_code: CURRENCY, value: info.price },
     }],
-    application_context: { brand_name: "CISOFT", shipping_preference: "NO_SHIPPING", user_action: "PAY_NOW" },
+    application_context: { brand_name: "AkeeTech", shipping_preference: "NO_SHIPPING", user_action: "PAY_NOW" },
   });
   if (r.status !== 201 || !r.json || !r.json.id) throw httpError(502, "Не удалось создать заказ в PayPal");
   send(res, 200, { id: r.json.id });

@@ -72,7 +72,7 @@ export function openSettings() {
         toast(p === 'denied' ? 'Уведомления запрещены в браузере. Разрешите их в настройках сайта (значок замка).' : 'Браузер не поддерживает уведомления.', 'error');
       } else toast('Уведомления включены', 'ok');
     }),
-    switchRow('Светлая тема', 'По умолчанию — тёмная тема CISOFT', getPref('theme') === 'light', (v) => { setPref('theme', v ? 'light' : 'dark'); applyTheme(); }),
+    switchRow('Светлая тема', 'По умолчанию — тёмная тема AkeeTech', getPref('theme') === 'light', (v) => { setPref('theme', v ? 'light' : 'dark'); applyTheme(); }),
     el('div', { class: 'row-end' },
       el('button', { class: 'btn danger', type: 'button', onclick: async () => {
         if (!await confirmDialog('Выйти из аккаунта?', 'Чтобы снова пользоваться мессенджером, нужно будет войти по email и паролю.', 'Выйти', true)) return;

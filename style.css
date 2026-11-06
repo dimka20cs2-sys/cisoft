@@ -1,4 +1,4 @@
-/* Базовые стили CISOFT — Modern Glassmorphism & Tech Edition
+/* Базовые стили AkeeTech — Modern Glassmorphism & Tech Edition
    Тёмная тема по умолчанию; светлая — css/theme.css */
 :root {
   --bg: #090a10;
@@ -106,6 +106,7 @@ button { font: inherit; color: inherit; }
   box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 45%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: transform .2s, box-shadow .2s;
 }
+.logo-img { background: none; box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent); }
 .brand:hover .logo { transform: scale(1.05); box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 60%, transparent); }
 .top nav { margin-left: auto; display: flex; gap: 18px; }
 .top nav a { color: var(--muted); font-size: 14.5px; font-weight: 500; }

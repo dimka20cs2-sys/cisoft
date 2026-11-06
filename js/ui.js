@@ -4,7 +4,6 @@
 
   // ── шапка/подвал ──
   document.getElementById("site-name").textContent = SITE.name || "";
-  document.getElementById("logo").textContent = (SITE.name || "?").replace(/[^A-Za-zА-Яа-я0-9]/g, "").slice(0, 2).toUpperCase();
   document.getElementById("copy").textContent = "© " + new Date().getFullYear() + " " + (SITE.author || SITE.name || "") + " · Файлы бесплатны.";
   if (SITE.contact) {
     ["contact-link", "foot-contact"].forEach(function (id) {

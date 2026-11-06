@@ -1,4 +1,4 @@
-# CISOFT
+# AkeeTech
 
 Бесплатные программы, сборки и конфиги для Windows и Minecraft.
 

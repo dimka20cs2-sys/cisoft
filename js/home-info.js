@@ -1,4 +1,4 @@
-// Главная: Pro, «Почему CISOFT», последние обновления, короткий FAQ и финальный призыв.
+// Главная: Pro, «Почему AkeeTech», последние обновления, короткий FAQ и финальный призыв.
 (function () {
   var CI = window.CI, esc = CI.esc, H = CI.home;
   var B = CI.homeBlocks = CI.homeBlocks || {};
@@ -27,7 +27,7 @@
       ["📖", "На русском", "Интерфейс, подсказки и справка — по-русски."],
       ["🔄", "Обновления", "Программы регулярно получают новые возможности — всё видно в новостях."]
     ];
-    return '<section class="h-sec">' + H.head("Почему " + esc(CI.SITE.name || "CISOFT")) + '<div class="h-why">' +
+    return '<section class="h-sec">' + H.head("Почему " + esc(CI.SITE.name || "AkeeTech")) + '<div class="h-why">' +
       list.map(function (w) { return '<div><span class="h-why-i" aria-hidden="true">' + w[0] + "</span><b>" + w[1] + "</b><p>" + w[2] + "</p></div>"; }).join("") +
       "</div></section>";
   };

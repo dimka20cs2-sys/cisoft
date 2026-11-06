@@ -20,7 +20,7 @@ const PRODUCTS = {
   "phone-info": { name: "Inside Pro", price: "0.99" },
   "net-tools": { name: "NetKit Pro", price: "0.99" },
   "hertzlab": { name: "HertzLab Pro", price: "0.99" },
-  "ultra": { name: "CISOFT Ultra", price: "9.99" },
+  "ultra": { name: "AkeeTech Ultra", price: "9.99" },
   "wordup": { name: "WordUp Pro", price: "0.99" },
   "chargeguard": { name: "ChargeGuard Pro", price: "0.99" },
   "levelup": { name: "LevelUp Pro", price: "0.99" },

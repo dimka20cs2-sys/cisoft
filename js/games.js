@@ -1,4 +1,4 @@
-// #/games — браузерные игры CISOFT, #/games/<id> — игра на странице (iframe games/<id>/).
+// #/games — браузерные игры AkeeTech, #/games/<id> — игра на странице (iframe games/<id>/).
 // Игры сообщают о себе через postMessage {type:'cisoft-game', id, event:'start'|'over', score}.
 (function () {
   var CI = window.CI, esc = CI.esc;
@@ -59,7 +59,7 @@
 
   CI.renderGames = function () {
     document.title = "Игры — " + (CI.SITE.name || "");
-    CI.app.innerHTML = '<section class="page-head"><h1>Игры</h1><p>Игры CISOFT для Windows и бесплатные игры прямо в браузере — на компьютере и на телефоне.</p></section>' +
+    CI.app.innerHTML = '<section class="page-head"><h1>Игры</h1><p>Игры AkeeTech для Windows и бесплатные игры прямо в браузере — на компьютере и на телефоне.</p></section>' +
       '<h2 class="games-h2">Игры для ПК</h2><p class="games-sub">Большие игры для Windows — скачайте и играйте. Скоро в Steam.</p><div class="games-grid">' + pcGames().map(pcCard).join("") + "</div>" +
       '<h2 class="games-h2">Играть в браузере</h2><div class="games-grid">' + CI.GAMES.map(card).join("") + "</div>" +
       (CI.TOOLS.length ? '<h2 class="games-h2">Инструменты для Minecraft</h2><div class="games-grid">' + CI.TOOLS.map(card).join("") + "</div>" : "") +

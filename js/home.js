@@ -21,7 +21,7 @@
     var newest = CI.byId("video-editor");
     return '<section class="h-hero"><div class="h-bg" aria-hidden="true"></div>' +
       '<div class="h-hero-text"><span class="h-eyebrow"><i></i>Бесплатно · без рекламы · на русском</span>' +
-      '<h1><span class="h-grad">' + esc(CI.SITE.name || "CISOFT") + "</span> — полезные программы для Windows, Android и Minecraft</h1>" +
+      '<h1><span class="h-grad">' + esc(CI.SITE.name || "AkeeTech") + "</span> — полезные программы для Windows, Android и Minecraft</h1>" +
       "<p>Небольшие быстрые программы без рекламы и сбора данных. Pro-версии — только по желанию. А ещё свой мессенджер и игры прямо в браузере.</p>" +
       '<div class="h-cta"><a class="h-btn" href="#/catalog">Смотреть программы</a><a class="h-btn h-btn2" href="#/games">▶ Играть в браузере</a></div>' +
       "</div>" +
@@ -71,7 +71,7 @@
   }
 
   CI.renderHome = function () {
-    document.title = "CISOFT — программы для Windows, Android и Minecraft";
+    document.title = "AkeeTech — программы для Windows, Android и Minecraft";
     var B = CI.homeBlocks || {}, part = function (fn) { return fn ? fn() : ""; };
     CI.app.innerHTML = '<div class="home">' + hero() + numbers() + popular() + types() +
       part(B.showcases) + part(B.pro) + part(B.why) + part(B.updates) + part(B.faq) + part(B.cta) + "</div>";

@@ -1,30 +1,148 @@
-/* #/minecraft — «Плюшки для майна». ВРЕМЕННОЕ оформление: его заменит дизайн в стиле Minecraft от Gemini. */
-.mc-page { padding-bottom: 40px; }
-.mc-hero { display: flex; align-items: center; gap: 24px; margin: 28px 0 32px; padding: 32px; border-radius: 18px;
-  background: linear-gradient(180deg, #5d9b3c 0 14%, #7a5536 14% 100%); color: #fff; }
-.mc-hero-text { flex: 1; }
-.mc-hero h1 { margin: 10px 0 8px; font-size: clamp(28px, 4vw, 44px); text-shadow: 3px 3px 0 #3a2a1a; }
-.mc-hero p { margin: 0; max-width: 620px; opacity: .92; }
-.mc-tag { display: inline-block; padding: 4px 10px; background: #3a2a1a; font-weight: 700; font-size: 13px; }
-.mc-hero-art { width: 160px; height: 160px; flex: none; background: #5d9b3c; box-shadow: inset 0 -110px 0 #7a5536; }
-.mc-sec { margin: 0 0 34px; }
-.mc-sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-.mc-sec-head h2 { margin: 0; }
-.mc-sec-head p { margin: 2px 0 0; color: var(--muted); }
-.mc-block { width: 38px; height: 38px; flex: none; background: #7a5536; }
-.mc-block[data-block="grass"] { background: linear-gradient(#5d9b3c 0 30%, #7a5536 30%); }
-.mc-block[data-block="diamond"] { background: #2fd5c6; }
-.mc-block[data-block="crafting"] { background: #a0703f; }
-.mc-tool { display: flex; gap: 18px; align-items: center; padding: 16px; border-radius: 14px; background: var(--card, #161a2a); color: inherit; }
-.mc-tool:hover { text-decoration: none; }
-.mc-tool-img { width: 220px; max-width: 40%; border-radius: 10px; }
-.mc-tool-body h3 { margin: 0 0 6px; }
-.mc-tool-body p { margin: 0 0 12px; color: var(--muted); }
-.mc-btn { display: inline-block; padding: 8px 14px; background: #5d9b3c; color: #fff; font-weight: 700; }
-.mc-count { color: var(--muted); text-align: center; }
-@media (max-width: 640px) {
-  .mc-hero { flex-direction: column; padding: 22px; }
-  .mc-hero-art { width: 100px; height: 100px; }
-  .mc-tool { flex-direction: column; align-items: flex-start; }
+/* #/minecraft — «Плюшки для майна» в стиле Minecraft: пиксельные текстуры (img/mc/*.svg),
+   выпуклые рамки как в интерфейсе игры, слоты-карточки с подсветкой выбранного слота. */
+.mc-page {
+  --mc-dark: #1b1b1f;
+  --mc-stone: #3a3a40;
+  --mc-edge-light: rgba(255, 255, 255, .28);
+  --mc-edge-dark: rgba(0, 0, 0, .55);
+  --mc-green: #6aad44;
+  --mc-diamond: #4ae8de;
+  padding-bottom: 48px;
+}
+.mc-page .pix { image-rendering: pixelated; }
+
+/* ---------- баннер: небо, облака, земля с травой ---------- */
+.mc-hero {
+  position: relative; overflow: hidden; display: flex; align-items: center; gap: 32px;
+  margin: 26px 0 38px; padding: 46px 44px 92px; border-radius: 10px;
+  background: linear-gradient(180deg, #4f9fe0 0%, #79bdf0 55%, #a6d6f6 100%);
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .35), 0 18px 50px rgba(0, 0, 0, .35);
+  color: #fff;
+}
+/* пиксельные облака */
+.mc-hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .95;
+  background:
+    linear-gradient(#fff, #fff) 8% 18% / 96px 24px no-repeat,
+    linear-gradient(#fff, #fff) calc(8% + 24px) calc(18% - 16px) / 48px 16px no-repeat,
+    linear-gradient(#f2f6fb, #f2f6fb) 58% 12% / 128px 24px no-repeat,
+    linear-gradient(#fff, #fff) calc(58% + 32px) calc(12% - 16px) / 64px 16px no-repeat,
+    linear-gradient(#fff, #fff) 88% 30% / 72px 16px no-repeat;
+  animation: mc-clouds 60s linear infinite;
+}
+/* полоса земли с травой внизу */
+.mc-hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 64px; pointer-events: none;
+  background: url("../img/mc/grass-side.svg") 0 0 / 64px 64px repeat-x;
+  image-rendering: pixelated;
+  box-shadow: inset 0 4px 0 rgba(0, 0, 0, .15);
+}
+@keyframes mc-clouds { from { background-position-x: 8%, calc(8% + 24px), 58%, calc(58% + 32px), 88%; }
+  to { background-position-x: 108%, calc(108% + 24px), 158%, calc(158% + 32px), 188%; } }
+
+.mc-hero-text { position: relative; z-index: 1; flex: 1; }
+.mc-hero h1 {
+  margin: 14px 0 12px; font-size: clamp(32px, 5vw, 58px); line-height: 1.05; letter-spacing: -.5px;
+  color: #fff; text-shadow: 4px 4px 0 #3f3f3f, 0 0 0 transparent;
+}
+.mc-hero p { margin: 0; max-width: 640px; font-size: 16px; line-height: 1.55; color: #f4fbff;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, .35); }
+.mc-tag {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 34px; position: relative;
+  font-weight: 800; font-size: 13px; letter-spacing: .5px; text-transform: uppercase; color: #fff;
+  background: rgba(30, 30, 30, .75);
+  box-shadow: inset 2px 2px 0 var(--mc-edge-light), inset -2px -2px 0 var(--mc-edge-dark);
+}
+.mc-tag::before { content: ""; position: absolute; left: 9px; top: 50%; width: 18px; height: 18px; margin-top: -9px;
+  background: url("../img/mc/diamond.svg") center / contain no-repeat; image-rendering: pixelated; }
+
+/* парящий блок травы */
+.mc-hero-art {
+  position: relative; z-index: 1; flex: none; width: 190px; height: 190px;
+  background: url("../img/mc/grass-block.svg") center / contain no-repeat; image-rendering: pixelated;
+  filter: drop-shadow(0 18px 12px rgba(0, 0, 0, .28));
+  animation: mc-bob 3.2s ease-in-out infinite;
+}
+@keyframes mc-bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+
+/* ---------- заголовки разделов ---------- */
+.mc-sec { margin: 0 0 40px; }
+.mc-sec-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.mc-sec-head h2 { margin: 0; font-size: 26px; letter-spacing: -.3px; text-shadow: 3px 3px 0 rgba(0, 0, 0, .35); }
+.mc-sec-head p { margin: 3px 0 0; color: var(--muted); }
+.mc-block {
+  width: 48px; height: 48px; flex: none; image-rendering: pixelated;
+  background: url("../img/mc/dirt.svg") center / 100% 100%;
+  box-shadow: inset 3px 3px 0 var(--mc-edge-light), inset -3px -3px 0 var(--mc-edge-dark), 0 6px 0 rgba(0, 0, 0, .25);
+}
+.mc-block[data-block="grass"] { background-image: url("../img/mc/grass-side.svg"); }
+.mc-block[data-block="diamond"] { background-image: url("../img/mc/diamond-ore.svg"); }
+.mc-block[data-block="crafting"] { background-image: url("../img/mc/crafting.svg"); }
+
+/* ---------- карточки программ как слоты инвентаря ---------- */
+.mc-page .mc-grid .card {
+  position: relative; border-radius: 4px; border: 0;
+  background:
+    linear-gradient(rgba(24, 24, 28, .86), rgba(24, 24, 28, .92)),
+    url("../img/mc/stone.svg") 0 0 / 64px 64px;
+  image-rendering: auto;
+  box-shadow: inset 3px 3px 0 rgba(255, 255, 255, .14), inset -3px -3px 0 rgba(0, 0, 0, .6), 0 8px 0 rgba(0, 0, 0, .25);
+  transition: transform .15s steps(3), box-shadow .15s;
+}
+.mc-page .mc-grid .card:hover {
+  transform: translateY(-4px);
+  box-shadow: inset 0 0 0 3px var(--mc-green), inset 3px 3px 0 rgba(255, 255, 255, .18), 0 12px 0 rgba(0, 0, 0, .3),
+    0 0 26px rgba(106, 173, 68, .35);
+}
+.mc-page .mc-grid .card-head img, .mc-page .mc-grid .card-head .ico {
+  border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .4), 0 3px 0 rgba(0, 0, 0, .35);
+}
+.mc-page .mc-grid .card h3 a { color: #fff; text-shadow: 2px 2px 0 rgba(0, 0, 0, .45); }
+.mc-page .mc-grid .card p { color: #c9c9cf; }
+.mc-page .mc-grid .card .meta { border-top: 2px dashed rgba(255, 255, 255, .08); }
+
+/* ---------- веб-инструмент: деревянная рамка ---------- */
+.mc-tool {
+  display: flex; gap: 22px; align-items: center; padding: 18px; color: inherit; border-radius: 4px;
+  background: url("../img/mc/planks.svg") 0 0 / 64px 64px; image-rendering: pixelated;
+  box-shadow: inset 4px 4px 0 rgba(255, 255, 255, .22), inset -4px -4px 0 rgba(0, 0, 0, .45), 0 8px 0 rgba(0, 0, 0, .25);
+  transition: transform .15s steps(3);
+}
+.mc-tool:hover { text-decoration: none; transform: translateY(-4px); }
+.mc-tool-img { width: 240px; max-width: 40%; image-rendering: auto; border: 4px solid #3b2a17; box-shadow: 0 0 0 2px #c79a5d; }
+.mc-tool-body { padding: 14px 18px; background: rgba(30, 20, 10, .78); box-shadow: inset 2px 2px 0 rgba(255, 255, 255, .12), inset -2px -2px 0 rgba(0, 0, 0, .5); }
+.mc-tool-body h3 { margin: 0 0 6px; color: #fff; font-size: 22px; text-shadow: 2px 2px 0 #000; }
+.mc-tool-body p { margin: 0 0 14px; color: #eadfcc; }
+
+/* кнопка как в меню Minecraft */
+.mc-btn {
+  display: inline-block; padding: 10px 22px; min-width: 180px; text-align: center;
+  font-weight: 800; color: #fff; text-shadow: 2px 2px 0 #3f3f3f;
+  background: url("../img/mc/stone.svg") 0 0 / 48px 48px; image-rendering: pixelated;
+  box-shadow: inset 0 0 0 2px #000, inset 3px 3px 0 #a8a8a8, inset -3px -3px 0 #555;
+}
+.mc-tool:hover .mc-btn { box-shadow: inset 0 0 0 2px #fff, inset 3px 3px 0 #c7d0ff, inset -3px -3px 0 #5a64b8; color: #ffffa0; }
+
+.mc-count {
+  width: fit-content; margin: 8px auto 0; padding: 8px 16px; font-weight: 700; color: #fff;
+  background: rgba(30, 30, 30, .7); box-shadow: inset 2px 2px 0 var(--mc-edge-light), inset -2px -2px 0 var(--mc-edge-dark);
+}
+
+/* светлая тема сайта */
+:root[data-theme="light"] .mc-page .mc-grid .card {
+  background: linear-gradient(rgba(250, 250, 252, .9), rgba(244, 244, 248, .94)), url("../img/mc/stone.svg") 0 0 / 64px 64px;
+  box-shadow: inset 3px 3px 0 #fff, inset -3px -3px 0 rgba(0, 0, 0, .18), 0 6px 0 rgba(0, 0, 0, .12);
+}
+:root[data-theme="light"] .mc-page .mc-grid .card h3 a { color: #1b1b1f; text-shadow: none; }
+:root[data-theme="light"] .mc-page .mc-grid .card p { color: #4b4b55; }
+:root[data-theme="light"] .mc-count { color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-hero::before, .mc-hero-art { animation: none; }
+}
+@media (max-width: 720px) {
+  .mc-hero { flex-direction: column-reverse; align-items: flex-start; padding: 28px 22px 84px; gap: 10px; }
+  .mc-hero-art { width: 120px; height: 120px; }
+  .mc-tool { flex-direction: column; align-items: stretch; }
   .mc-tool-img { max-width: 100%; width: 100%; }
 }

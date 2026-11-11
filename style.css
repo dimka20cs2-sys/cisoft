@@ -457,3 +457,11 @@ footer .right { margin-left: auto; }
   color: #f59e0b;
   border-color: color-mix(in srgb, #f59e0b 35%, transparent);
 }
+
+/* Покупка через сообщения автору в Pingo */
+.shop-contact { display: flex; flex-direction: column; gap: 10px; }
+.shop-how { margin: 0; font-size: 14px; }
+.shop-user { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px;
+  border-radius: 10px; background: color-mix(in srgb, var(--accent) 14%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+.shop-user b { font-size: 18px; letter-spacing: .2px; }
+.shop-contact > .btn { width: 100%; justify-content: center; }

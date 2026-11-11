@@ -1,5 +1,5 @@
 // Service worker Pingo: кэш «оболочки», сеть — в приоритете.
-const CACHE = 'cisoft-msg-v1';
+const CACHE = 'cisoft-msg-v2';
 const SHELL = [
   './', 'index.html', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png',
   'css/theme.css', 'css/layout.css', 'css/chat.css', 'css/overlays.css', 'css/call.css',

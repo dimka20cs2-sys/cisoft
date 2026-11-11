@@ -98,7 +98,8 @@ onAuthStateChanged(auth, async (user) => {
     if (!prof) {
       const pending = takePendingProfile();
       $('#boot').hidden = true;
-      if (!pending) { showSetup(user.uid, {}, '', start); return; }
+      // вход через Google без профиля — предложить имя из аккаунта Google
+      if (!pending) { showSetup(user.uid, { name: (user.displayName || '').slice(0, 60) }, '', start); return; }
       try { await claimProfile(user.uid, pending.name, pending.username); }
       catch (e) { showSetup(user.uid, pending, errText(e), start); return; }
     }

@@ -82,3 +82,9 @@
 @media (min-width: 760px) {
   .only-mobile { display: none !important; }
 }
+
+/* Вход через Google */
+.google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f1f1f; border: 1px solid #dadce0; font-weight: 600; }
+.google-btn:hover { filter: none; background: #f6f8fc; }
+.auth-or { display: flex; align-items: center; gap: 10px; margin: 14px 0; color: var(--muted, #8b8b9a); font-size: 12.5px; }
+.auth-or::before, .auth-or::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .35; }

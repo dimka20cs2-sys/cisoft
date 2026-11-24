@@ -4,8 +4,8 @@ import { db } from '../messenger/js/fb.js';
 import { doc, getDoc, setDoc, getDocs, query, collection, orderBy, limit, serverTimestamp } from '../messenger/js/fs.js';
 import { acc } from './acc-core.js';
 
-const CI = window.CI, esc = CI.esc;
-const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
+const CI = window.CI, esc = CI.esc, T = CI.t;
+const fmt = (n) => Math.round(n).toLocaleString(CI.locale());
 const cache = {}; // игра → { at, rows }
 
 async function top(game, n) {
@@ -18,7 +18,7 @@ async function top(game, n) {
 }
 
 function listHtml(g, rows) {
-  if (!rows.length) return '<p class="top-note">Пока никого — стань первым!</p>';
+  if (!rows.length) return '<p class="top-note">' + T('Пока никого — стань первым!') + '</p>';
   const me = acc.user && acc.user.uid;
   return '<ol class="top-list">' + rows.map((r) =>
     '<li class="' + (r.uid === me ? 'me' : '') + '"><span class="who">' + esc(r.name || ('@' + r.username)) + '</span>' +
@@ -27,24 +27,25 @@ function listHtml(g, rows) {
 
 function note() {
   return acc.user && acc.profile ? '' :
-    '<p class="top-note">Войди в аккаунт (кнопка «Войти» вверху), чтобы попасть в таблицу.</p>';
+    '<p class="top-note">' + T('Войди в аккаунт (кнопка «Войти» вверху), чтобы попасть в таблицу.') + '</p>';
 }
 
 CI.renderGameTop = async (g, el) => {
   if (!el) return;
-  el.innerHTML = '<h2>Лучшие игроки</h2><p class="top-note">Загрузка…</p>';
-  try { el.innerHTML = '<h2>Лучшие игроки</h2>' + listHtml(g, await top(g.id, 10)) + note(); }
-  catch (e) { el.innerHTML = '<h2>Лучшие игроки</h2><p class="top-note">Таблица сейчас недоступна.</p>'; }
+  const h = '<h2>' + T('Лучшие игроки') + '</h2>';
+  el.innerHTML = h + '<p class="top-note">' + T('Загрузка…') + '</p>';
+  try { el.innerHTML = h + listHtml(g, await top(g.id, 10)) + note(); }
+  catch (e) { el.innerHTML = h + '<p class="top-note">' + T('Таблица сейчас недоступна.') + '</p>'; }
 };
 
 CI.renderGamesTop = async (el) => {
   if (!el) return;
-  el.innerHTML = '<h2>Таблица лидеров</h2><div class="games-tops">' +
-    CI.GAMES.map((g) => '<section data-top="' + g.id + '"><h2>' + esc(g.name) + '</h2><p class="top-note">Загрузка…</p></section>').join('') + '</div>';
+  el.innerHTML = '<h2>' + T('Таблица лидеров') + '</h2><div class="games-tops">' +
+    CI.GAMES.map((g) => '<section data-top="' + g.id + '"><h2>' + esc(g.name) + '</h2><p class="top-note">' + T('Загрузка…') + '</p></section>').join('') + '</div>';
   for (const g of CI.GAMES) {
     const s = el.querySelector('[data-top="' + g.id + '"]');
     try { const rows = await top(g.id, 5); if (s) s.innerHTML = '<h2>' + esc(g.name) + '</h2>' + listHtml(g, rows); }
-    catch (e) { if (s) s.innerHTML = '<h2>' + esc(g.name) + '</h2><p class="top-note">Недоступно.</p>'; }
+    catch (e) { if (s) s.innerHTML = '<h2>' + esc(g.name) + '</h2><p class="top-note">' + T('Недоступно.') + '</p>'; }
   }
 };
 

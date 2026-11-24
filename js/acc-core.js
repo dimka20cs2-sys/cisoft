@@ -7,7 +7,7 @@ import { doc, onSnapshot, collection, query, where } from '../messenger/js/fs.js
 import { colorFor, initials, isDataImage, toMs } from '../messenger/js/util.js';
 
 const CI = window.CI;
-const esc = CI.esc;
+const esc = CI.esc, T = CI.t, N = CI.N_;
 const listeners = new Set();
 const EMPTY = () => ({ favorites: {}, downloads: [], lastAccountVisit: 0, purchases: {} });
 
@@ -115,27 +115,27 @@ export function joinedMs() {
 }
 
 const ERR = {
-  'auth/invalid-email': 'Неверный формат email.',
-  'auth/missing-email': 'Введите email.',
-  'auth/missing-password': 'Введите пароль.',
-  'auth/email-already-in-use': 'Этот email уже зарегистрирован. Попробуйте войти.',
-  'auth/weak-password': 'Слишком простой пароль — нужно минимум 6 символов.',
-  'auth/invalid-credential': 'Неверный email или пароль.',
-  'auth/invalid-login-credentials': 'Неверный email или пароль.',
-  'auth/wrong-password': 'Неверный пароль.',
-  'auth/user-not-found': 'Пользователь с таким email не найден.',
-  'auth/user-mismatch': 'Пароль не подходит к этому аккаунту.',
-  'auth/user-disabled': 'Этот аккаунт отключён.',
-  'auth/too-many-requests': 'Слишком много попыток. Подождите немного и попробуйте снова.',
-  'auth/network-request-failed': 'Нет соединения с сервером. Проверьте интернет.',
-  'auth/requires-recent-login': 'Для этого действия нужно заново ввести пароль.',
-  'auth/operation-not-allowed': 'Вход по email отключён в настройках проекта.',
-  'permission-denied': 'Недостаточно прав для этого действия.',
-  'unavailable': 'Сервер недоступен. Проверьте интернет.',
-  'resource-exhausted': 'Превышен лимит сервера. Попробуйте позже.'
+  'auth/invalid-email': N('Неверный формат email.'),
+  'auth/missing-email': N('Введите email.'),
+  'auth/missing-password': N('Введите пароль.'),
+  'auth/email-already-in-use': N('Этот email уже зарегистрирован. Попробуйте войти.'),
+  'auth/weak-password': N('Слишком простой пароль — нужно минимум 6 символов.'),
+  'auth/invalid-credential': N('Неверный email или пароль.'),
+  'auth/invalid-login-credentials': N('Неверный email или пароль.'),
+  'auth/wrong-password': N('Неверный пароль.'),
+  'auth/user-not-found': N('Пользователь с таким email не найден.'),
+  'auth/user-mismatch': N('Пароль не подходит к этому аккаунту.'),
+  'auth/user-disabled': N('Этот аккаунт отключён.'),
+  'auth/too-many-requests': N('Слишком много попыток. Подождите немного и попробуйте снова.'),
+  'auth/network-request-failed': N('Нет соединения с сервером. Проверьте интернет.'),
+  'auth/requires-recent-login': N('Для этого действия нужно заново ввести пароль.'),
+  'auth/operation-not-allowed': N('Вход по email отключён в настройках проекта.'),
+  'permission-denied': N('Недостаточно прав для этого действия.'),
+  'unavailable': N('Сервер недоступен. Проверьте интернет.'),
+  'resource-exhausted': N('Превышен лимит сервера. Попробуйте позже.')
 };
 export function errText(e) {
-  return ERR[(e && e.code) || ''] || (e && e.userMessage) || 'Что-то пошло не так. Попробуйте ещё раз.';
+  return T(ERR[(e && e.code) || ''] || (e && e.userMessage) || N('Что-то пошло не так. Попробуйте ещё раз.'));
 }
 
 if (isEmu) window.__ciAcc = { acc, auth, db }; // только для локальных проверок на эмуляторе

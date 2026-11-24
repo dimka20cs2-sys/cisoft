@@ -1,6 +1,6 @@
 // Маршрутизация по хэшу: #/ — главная, #/catalog[?type=…&q=…], #/item/<id>, #/news, #/faq, #/messenger, #/account.
 (function () {
-  var CI = window.CI, prev = null;
+  var CI = window.CI, T = CI.t, prev = null;
 
   function route() {
     var h = location.hash || "#/";
@@ -19,8 +19,8 @@
     CI.msgr.setPage(isMsgr);
 
     if (isMsgr) {
-      document.title = "Мессенджер — " + (CI.SITE.name || "");
-      CI.app.innerHTML = '<h1 class="sr-only">Мессенджер</h1>';
+      document.title = T("Мессенджер") + " — " + (CI.SITE.name || "");
+      CI.app.innerHTML = '<h1 class="sr-only">' + T("Мессенджер") + '</h1>';
     } else if (name === "item") {
       var id;
       try { id = decodeURIComponent(m[1]); } catch (e) { id = m[1]; }
@@ -37,7 +37,7 @@
     else if (name === "account") {
       // модуль кабинета (js/account.js) грузится отложенно — он сам дорисует страницу
       if (CI.renderAccount) CI.renderAccount();
-      else { document.title = "Личный кабинет — " + (CI.SITE.name || ""); CI.app.innerHTML = '<div class="empty">Загрузка…</div>'; }
+      else { document.title = T("Личный кабинет") + " — " + (CI.SITE.name || ""); CI.app.innerHTML = '<div class="empty">' + T("Загрузка…") + '</div>'; }
     }
     else CI.renderHome();
 
@@ -53,6 +53,13 @@
     }
     prev = name;
   }
+
+  // Перерисовать текущую страницу (смена языка) — без прокрутки наверх
+  CI.route = function () {
+    var y = window.scrollY;
+    route();
+    window.scrollTo(0, y);
+  };
 
   window.addEventListener("hashchange", route);
   route();

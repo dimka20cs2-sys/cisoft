@@ -4,7 +4,7 @@ import { favoritesHtml, downloadsHtml, likesHtml, messengerHtml, purchasesHtml, 
 import { adminHtml, bindAdmin } from './acc-admin.js';
 import { securityHtml, bindSecurity, openDeleteDialog } from './acc-security.js';
 
-const CI = window.CI, esc = CI.esc;
+const CI = window.CI, esc = CI.esc, T = CI.t;
 const onPage = () => location.hash === '#/account';
 let shape = '', prevVisit = 0, entered = false;
 
@@ -15,26 +15,26 @@ function computeShape() {
   return isAdmin() ? 'full-admin' : 'full';
 }
 
-const HEAD = '<section class="page-head"><h1>Личный кабинет</h1>' +
-  '<p>Профиль, избранное, загрузки и лайки. Один аккаунт — и для сайта, и для мессенджера.</p></section>';
+const head = () => '<section class="page-head"><h1>' + T('Личный кабинет') + '</h1>' +
+  '<p>' + T('Профиль, избранное, загрузки и лайки. Один аккаунт — и для сайта, и для мессенджера.') + '</p></section>';
 
 function guestHtml() {
-  return HEAD + '<div class="acc-card acc-invite">' +
+  return head() + '<div class="acc-card acc-invite">' +
     '<div class="acc-invite-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>' +
-    '<h2>Войдите, чтобы открыть кабинет</h2>' +
-    '<ul class="acc-perks"><li><b>☆ Избранное</b> — и подсказка, когда программа обновится</li>' +
-      '<li><b>⬇ Мои загрузки</b> — что и когда вы скачивали</li>' +
-      '<li><b>❤ Честные лайки</b> — один человек, один лайк</li>' +
-      '<li><b>💬 Мессенджер</b> — тот же аккаунт, входить второй раз не нужно</li></ul>' +
-    '<div class="acc-invite-btns"><button type="button" class="acc-btn2 primary" data-act="login">Войти</button>' +
-    '<button type="button" class="acc-btn2" data-act="register">Зарегистрироваться</button></div></div>';
+    '<h2>' + T('Войдите, чтобы открыть кабинет') + '</h2>' +
+    '<ul class="acc-perks"><li><b>☆ ' + T('Избранное') + '</b> — ' + T('и подсказка, когда программа обновится') + '</li>' +
+      '<li><b>⬇ ' + T('Мои загрузки') + '</b> — ' + T('что и когда вы скачивали') + '</li>' +
+      '<li><b>❤ ' + T('Честные лайки') + '</b> — ' + T('один человек, один лайк') + '</li>' +
+      '<li><b>💬 ' + T('Мессенджер') + '</b> — ' + T('тот же аккаунт, входить второй раз не нужно') + '</li></ul>' +
+    '<div class="acc-invite-btns"><button type="button" class="acc-btn2 primary" data-act="login">' + T('Войти') + '</button>' +
+    '<button type="button" class="acc-btn2" data-act="register">' + T('Зарегистрироваться') + '</button></div></div>';
 }
 
 function setupHtml() {
-  return HEAD + '<div class="acc-card acc-invite"><h2>Завершите регистрацию</h2>' +
-    '<p class="acc-p">Вы вошли как ' + esc(acc.user.email || '') + ', но ещё не выбрали имя и @username.</p>' +
-    '<div class="acc-invite-btns"><button type="button" class="acc-btn2 primary" data-act="setup">Выбрать имя</button>' +
-    '<button type="button" class="acc-btn2" data-act="logout">Выйти</button></div></div>';
+  return head() + '<div class="acc-card acc-invite"><h2>' + T('Завершите регистрацию') + '</h2>' +
+    '<p class="acc-p">' + T('Вы вошли как {email}, но ещё не выбрали имя и @username.', { email: esc(acc.user.email || '') }) + '</p>' +
+    '<div class="acc-invite-btns"><button type="button" class="acc-btn2 primary" data-act="setup">' + T('Выбрать имя') + '</button>' +
+    '<button type="button" class="acc-btn2" data-act="logout">' + T('Выйти') + '</button></div></div>';
 }
 
 function profileViewHtml() {
@@ -43,23 +43,23 @@ function profileViewHtml() {
     '<div class="acc-pv-info"><b class="acc-pv-name">' + esc(p.name) + '</b>' +
       '<span class="acc-pv-un">@' + esc(p.username) + '</span>' +
       '<span>' + esc(acc.user.email || '') + '</span>' +
-      (j ? '<span>С нами с ' + fmtDay(j) + '</span>' : '') + '</div></div>' +
-    '<div class="acc-pv-btns"><button type="button" class="acc-btn2 sm" data-act="pick-photo">' + (p.avatar ? 'Сменить фото' : 'Загрузить фото') + '</button>' +
-    (p.avatar ? '<button type="button" class="acc-btn2 sm" data-act="remove-photo">Убрать фото</button>' : '') + '</div>';
+      (j ? '<span>' + T('С нами с {date}', { date: fmtDay(j) }) + '</span>' : '') + '</div></div>' +
+    '<div class="acc-pv-btns"><button type="button" class="acc-btn2 sm" data-act="pick-photo">' + (p.avatar ? T('Сменить фото') : T('Загрузить фото')) + '</button>' +
+    (p.avatar ? '<button type="button" class="acc-btn2 sm" data-act="remove-photo">' + T('Убрать фото') + '</button>' : '') + '</div>';
 }
 
 function fullHtml() {
-  return HEAD + '<div class="acc-layout"><div class="acc-main">' +
+  return head() + '<div class="acc-layout"><div class="acc-main">' +
       '<section class="acc-card" id="acc-buy"></section>' +
       '<section class="acc-card" id="acc-fav"></section>' +
       '<section class="acc-card" id="acc-dl"></section>' +
       '<section class="acc-card" id="acc-likes"></section>' +
     '</div><aside class="acc-side">' +
-      '<section class="acc-card acc-profile"><div class="acc-card-head"><h2>Профиль</h2></div><div id="acc-prof-view"></div>' +
-        '<form class="acc-form acc-name" id="acc-name-form" novalidate><div class="af"><label for="acc-name">Имя для показа</label>' +
+      '<section class="acc-card acc-profile"><div class="acc-card-head"><h2>' + T('Профиль') + '</h2></div><div id="acc-prof-view"></div>' +
+        '<form class="acc-form acc-name" id="acc-name-form" novalidate><div class="af"><label for="acc-name">' + T('Имя для показа') + '</label>' +
         '<div class="acc-inline"><input class="ain" id="acc-name" name="name" maxlength="60" value="' + esc(acc.profile.name) + '">' +
-        '<button type="submit" class="acc-btn2 primary">Сохранить</button></div></div>' +
-        '<div class="af-hint">@username поменять нельзя — по нему вас находят в мессенджере.</div></form>' +
+        '<button type="submit" class="acc-btn2 primary">' + T('Сохранить') + '</button></div></div>' +
+        '<div class="af-hint">' + T('@username поменять нельзя — по нему вас находят в мессенджере.') + '</div></form>' +
         '<input type="file" accept="image/*" id="acc-file" hidden></section>' +
       '<section class="acc-card" id="acc-msgr"></section>' +
       '<section class="acc-card" id="acc-sec">' + securityHtml() + '</section>' +
@@ -92,9 +92,9 @@ function fillSections() {
 }
 
 export function renderAccount() {
-  document.title = 'Личный кабинет — ' + (CI.SITE.name || '');
+  document.title = T('Личный кабинет') + ' — ' + (CI.SITE.name || '');
   shape = computeShape();
-  if (shape === 'loading') CI.app.innerHTML = HEAD + '<div class="empty">Загрузка…</div>';
+  if (shape === 'loading') CI.app.innerHTML = head() + '<div class="empty">' + T('Загрузка…') + '</div>';
   else if (shape === 'guest') CI.app.innerHTML = guestHtml();
   else if (shape === 'setup') CI.app.innerHTML = setupHtml();
   else {
@@ -104,13 +104,13 @@ export function renderAccount() {
     bindAdmin(adm, () => put('acc-admin', adminHtml()));
     document.getElementById('acc-name-form').onsubmit = async (e) => {
       e.preventDefault();
-      try { await acc.saveName(document.getElementById('acc-name').value); CI.toast('Имя сохранено'); }
+      try { await acc.saveName(document.getElementById('acc-name').value); CI.toast(T('Имя сохранено')); }
       catch (ex) { CI.toast(errText(ex)); }
     };
     document.getElementById('acc-file').onchange = async (e) => {
       const f = e.target.files[0]; e.target.value = '';
       if (!f) return;
-      try { await acc.setAvatarFile(f); CI.toast('Фото профиля обновлено'); } catch (ex) { CI.toast(errText(ex)); }
+      try { await acc.setAvatarFile(f); CI.toast(T('Фото профиля обновлено')); } catch (ex) { CI.toast(errText(ex)); }
     };
     fillSections();
   }
@@ -128,12 +128,12 @@ CI.app.addEventListener('click', (e) => {
   if (!t || !onPage()) return;
   const a = t.dataset.act;
   if (a === 'login' || a === 'register' || a === 'setup') acc.openAuth(a);
-  else if (a === 'logout') acc.logout().then(() => CI.toast('Вы вышли из аккаунта'));
+  else if (a === 'logout') acc.logout().then(() => CI.toast(T('Вы вышли из аккаунта')));
   else if (a === 'pick-photo') document.getElementById('acc-file').click();
-  else if (a === 'remove-photo') acc.removeAvatar().then(() => CI.toast('Фото убрано'), (ex) => CI.toast(errText(ex)));
+  else if (a === 'remove-photo') acc.removeAvatar().then(() => CI.toast(T('Фото убрано')), (ex) => CI.toast(errText(ex)));
   else if (a === 'open-msgr') CI.msgr.open();
   else if (a === 'clear-dl') acc.clearDownloads();
-  else if (a === 'copy-key') navigator.clipboard.writeText(t.dataset.key).then(() => CI.toast('Ключ скопирован'), () => CI.toast('Не удалось скопировать'));
+  else if (a === 'copy-key') navigator.clipboard.writeText(t.dataset.key).then(() => CI.toast(T('Ключ скопирован')), () => CI.toast(T('Не удалось скопировать')));
   else if (a === 'delete-acc') openDeleteDialog();
 });
 

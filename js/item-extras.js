@@ -1,6 +1,6 @@
 // Страница программы: подсказка по ОС, QR-код для APK, «Поделиться».
 (function () {
-  var CI = window.CI, esc = CI.esc;
+  var CI = window.CI, esc = CI.esc, T = CI.t;
 
   // Какой вариант загрузки подходит системе пользователя (-1 — не знаем)
   CI.recommendIndex = function (list) {
@@ -23,7 +23,7 @@
     var url = CI.SITE_URL + apk.replace(/^\.?\//, "");
     return '<div class="qr" data-qr="' + esc(url) + '">' +
       '<div class="qr-code" aria-hidden="true"></div>' +
-      '<div class="qr-text"><b>Скачать на телефон</b><span>Наведите камеру телефона на код</span></div></div>';
+      '<div class="qr-text"><b>' + T("Скачать на телефон") + '</b><span>' + T("Наведите камеру телефона на код") + '</span></div></div>';
   };
 
   var qrLib = null;
@@ -64,11 +64,11 @@
   };
 
   function copy(text) {
-    function done() { CI.toast("Ссылка скопирована"); }
+    function done() { CI.toast(T("Ссылка скопирована")); }
     if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(done, function () { legacy(text) ? done() : CI.toast("Не удалось скопировать: " + text, { timeout: 8000 }); });
+      navigator.clipboard.writeText(text).then(done, function () { legacy(text) ? done() : CI.toast(T("Не удалось скопировать:") + " " + text, { timeout: 8000 }); });
     } else if (legacy(text)) done();
-    else CI.toast("Ссылка: " + text, { timeout: 8000 });
+    else CI.toast(T("Ссылка:") + " " + text, { timeout: 8000 });
   }
   function legacy(text) {
     var ta = document.createElement("textarea");

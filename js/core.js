@@ -4,6 +4,8 @@
   CI.SITE = window.SITE || {};
   CI.TYPES = window.TYPES || {};
   CI.ITEMS = window.ITEMS || [];
+  if (CI.applyItemsLang) { CI.applyItemsLang(); CI.applyMetaLang(); } // js/i18n.js: тексты на выбранном языке
+  var T = CI.t || function (s) { return s; };
   CI.SITE_URL = (CI.SITE.url || "https://cisoft.vercel.app/").replace(/\/?$/, "/");
   CI.app = document.getElementById("app");
 
@@ -19,7 +21,7 @@
   };
   CI.longDate = function (d) {
     var t = CI.parseDate(d);
-    return t ? t.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : CI.esc(d);
+    return t ? t.toLocaleDateString(CI.locale ? CI.locale() : "ru-RU", { day: "numeric", month: "long", year: "numeric" }) : CI.esc(d);
   };
   CI.parseDate = function (d) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(d || ""));
@@ -32,15 +34,15 @@
     var days = (Date.now() - t.getTime()) / 864e5;
     return days >= -1 && days <= 14;
   };
-  // 1 программа, 2 программы, 5 программ
-  CI.plural = function (n, one, few, many) {
+  // 1 программа, 2 программы, 5 программ (с учётом языка — см. js/i18n.js)
+  if (!CI.plural) CI.plural = function (n, one, few, many) {
     var a = Math.abs(n) % 100, b = a % 10;
     if (a > 10 && a < 20) return many;
     if (b === 1) return one;
     if (b >= 2 && b <= 4) return few;
     return many;
   };
-  CI.num = function (n) { return Number(n || 0).toLocaleString("ru-RU"); };
+  CI.num = function (n) { return Number(n || 0).toLocaleString(CI.locale ? CI.locale() : "ru-RU"); };
 
   CI.icon = function (it, big) {
     var cls = "icon" + (big ? " big" : "");
@@ -105,17 +107,17 @@
   // Вход нужен: открываем окно входа с пояснением (если модуль аккаунта ещё грузится — тост)
   CI.requireLogin = function (why) {
     if (CI.acc && CI.acc.openAuth) CI.acc.openAuth("login", why);
-    else CI.toast(why + " Войдите в аккаунт (кнопка «Войти» вверху).");
+    else CI.toast(why + " " + T("Войдите в аккаунт (кнопка «Войти» вверху)."));
   };
   function signedIn() { return !!(CI.acc && CI.acc.ready && CI.acc.user && CI.acc.profile); }
   CI.toggleLike = function (id) {
-    if (CI.acc && !CI.acc.ready) return CI.toast("Проверяем вход…");
-    if (!signedIn()) return CI.requireLogin("Лайки ставят зарегистрированные пользователи — так счётчик честный.");
+    if (CI.acc && !CI.acc.ready) return CI.toast(T("Проверяем вход…"));
+    if (!signedIn()) return CI.requireLogin(T("Лайки ставят зарегистрированные пользователи — так счётчик честный."));
     CI.acc.toggleLike(id);
   };
   CI.toggleFav = function (id) {
-    if (CI.acc && !CI.acc.ready) return CI.toast("Проверяем вход…");
-    if (!signedIn()) return CI.requireLogin("Избранное хранится в личном кабинете.");
+    if (CI.acc && !CI.acc.ready) return CI.toast(T("Проверяем вход…"));
+    if (!signedIn()) return CI.requireLogin(T("Избранное хранится в личном кабинете."));
     CI.acc.toggleFav(id);
   };
 
@@ -136,9 +138,9 @@
       var on = CI.isFav(el.getAttribute("data-fav"));
       el.classList.toggle("on", on);
       el.setAttribute("aria-pressed", on ? "true" : "false");
-      el.title = on ? "Убрать из избранного" : "В избранное";
+      el.title = on ? T("Убрать из избранного") : T("В избранное");
       var s = el.querySelector(".star"); if (s) s.textContent = on ? "★" : "☆";
-      var l = el.querySelector(".fav-label"); if (l) l.textContent = on ? "В избранном" : "В избранное";
+      var l = el.querySelector(".fav-label"); if (l) l.textContent = on ? T("В избранном") : T("В избранное");
     });
     var tot = document.getElementById("hero-total");
     if (tot) tot.innerHTML = CI.heroLine();
@@ -150,7 +152,7 @@
       var d = CI.totalDownloads();
       parts.push(CI.num(d) + " " + CI.plural(d, "скачивание", "скачивания", "скачиваний"));
     }
-    parts.push("бесплатно");
+    parts.push(T("бесплатно"));
     return parts.map(CI.esc).join(" · ");
   };
 
@@ -183,7 +185,7 @@
       t.appendChild(b);
     }
     var x = document.createElement("button");
-    x.type = "button"; x.className = "toast-x"; x.setAttribute("aria-label", "Закрыть"); x.textContent = "✕";
+    x.type = "button"; x.className = "toast-x"; x.setAttribute("aria-label", T("Закрыть")); x.textContent = "✕";
     x.onclick = close;
     t.appendChild(x);
     box.appendChild(t);

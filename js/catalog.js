@@ -1,7 +1,7 @@
 // #/catalog[?type=…&q=…&sort=…] — каталог: фильтры по типам, сортировка, поиск, карточки.
 (function () {
-  var CI = window.CI, esc = CI.esc;
-  var SORTS = [["new", "Новые"], ["popular", "Популярные"], ["az", "А–Я"]];
+  var CI = window.CI, esc = CI.esc, T = CI.t;
+  var SORTS = [["new", CI.N_("Новые")], ["popular", CI.N_("Популярные")], ["az", CI.N_("А–Я")]];
   var state = CI.catalog = { type: "all", q: "", sort: CI.load("ci-sort", "new") };
   if (!SORTS.some(function (s) { return s[0] === state.sort; })) state.sort = "new";
 
@@ -10,7 +10,7 @@
   function items() { return CI.ITEMS.filter(function (it) { return it.type !== "pcgames"; }); }
   function sorted() {
     var arr = items().map(function (it, i) { return { it: it, i: i }; });
-    if (state.sort === "az") arr.sort(function (a, b) { return String(a.it.name).localeCompare(String(b.it.name), "ru", { sensitivity: "base" }); });
+    if (state.sort === "az") arr.sort(function (a, b) { return String(a.it.name).localeCompare(String(b.it.name), CI.lang, { sensitivity: "base" }); });
     else if (state.sort === "popular") arr.sort(function (a, b) { return score(b.it) - score(a.it) || byDate(a, b); });
     else arr.sort(byDate);
     return arr.map(function (x) { return x.it; });
@@ -38,24 +38,24 @@
 
   CI.renderCatalog = function (qs) {
     fromQuery(qs);
-    document.title = "Каталог программ — " + (CI.SITE.name || "");
+    document.title = T("Каталог программ") + " — " + (CI.SITE.name || "");
     var counts = {};
     items().forEach(function (it) { counts[it.type] = (counts[it.type] || 0) + 1; });
-    var chips = '<button type="button" class="chip' + (state.type === "all" ? " on" : "") + '" data-type="all">Всё<b>' + items().length + "</b></button>";
+    var chips = '<button type="button" class="chip' + (state.type === "all" ? " on" : "") + '" data-type="all">' + T("Всё") + '<b>' + items().length + "</b></button>";
     Object.keys(CI.TYPES).forEach(function (t) {
       if (counts[t]) chips += '<button type="button" class="chip' + (state.type === t ? " on" : "") + '" data-type="' + esc(t) + '">' + esc(CI.TYPES[t]) + "<b>" + counts[t] + "</b></button>";
     });
     var seg = SORTS.map(function (s) {
-      return '<button type="button" data-sort="' + s[0] + '" aria-pressed="' + (state.sort === s[0]) + '"' + (state.sort === s[0] ? ' class="on"' : "") + ">" + s[1] + "</button>";
+      return '<button type="button" data-sort="' + s[0] + '" aria-pressed="' + (state.sort === s[0]) + '"' + (state.sort === s[0] ? ' class="on"' : "") + ">" + T(s[1]) + "</button>";
     }).join("");
 
     CI.app.innerHTML =
-      '<section class="hero"><h1>Каталог <span>' + esc(CI.SITE.name || "") + "</span></h1>" +
+      '<section class="hero"><h1>' + T("Каталог {name}", { name: '<span>' + esc(CI.SITE.name || "") + '</span>' }) + "</h1>" +
       "<p>" + esc(CI.SITE.tagline || "") + "</p>" +
       '<div class="hero-total" id="hero-total">' + CI.heroLine() + "</div></section>" +
       '<div class="tools">' + chips + "</div>" +
-      '<div class="tools2"><div class="seg" role="group" aria-label="Сортировка">' + seg + "</div>" +
-      '<input class="search" id="search" type="search" placeholder="Поиск…  ( / )" aria-label="Поиск" value="' + esc(state.q) + '"></div>' +
+      '<div class="tools2"><div class="seg" role="group" aria-label="' + T("Сортировка") + '">' + seg + "</div>" +
+      '<input class="search" id="search" type="search" placeholder="' + T("Поиск…") + '  ( / )" aria-label="' + T("Поиск") + '" value="' + esc(state.q) + '"></div>' +
       '<div id="grid"></div>';
 
     CI.app.querySelectorAll(".chip").forEach(function (b) {
@@ -95,9 +95,10 @@
     var list = sorted().filter(function (it) {
       if (state.type !== "all" && it.type !== state.type) return false;
       if (!q) return true;
-      return [it.name, it.alias || "", it.short, (it.tags || []).join(" ")].join(" ").toLowerCase().indexOf(q) >= 0;
+      var ru = it._ru || {};
+      return [it.name, it.alias || "", it.short, (it.tags || []).join(" "), ru.short || "", (ru.tags || []).join(" ")].join(" ").toLowerCase().indexOf(q) >= 0;
     });
-    if (!list.length) { g.innerHTML = '<div class="grid"><div class="empty">Ничего не найдено</div></div>'; return; }
+    if (!list.length) { g.innerHTML = '<div class="grid"><div class="empty">' + T("Ничего не найдено") + '</div></div>'; return; }
     if (state.type !== "all") {
       g.innerHTML = '<div class="grid">' + list.map(card).join("") + "</div>";
     } else {
@@ -123,16 +124,16 @@
     return '<article class="card">' +
       '<div class="card-head">' + CI.icon(it) + "<div>" +
         '<h3><a class="card-link" href="#/item/' + encodeURIComponent(it.id) + '">' + esc(it.name) + "</a></h3>" +
-        CI.badge(it.type) + (it.product ? '<span class="pro-badge">PRO · $' + esc(it.price) + '</span>' : '') + (CI.isNew(it) ? '<span class="new-tag">Новое</span>' : "") +
+        CI.badge(it.type) + (it.product ? '<span class="pro-badge">PRO · $' + esc(it.price) + '</span>' : '') + (CI.isNew(it) ? '<span class="new-tag">' + T("Новое") + '</span>' : "") +
       "</div></div>" +
       "<p>" + esc(it.short) + "</p>" +
       '<div class="meta">' +
         (it.version ? "<span>v" + esc(it.version) + "</span>" : "") +
         (it.date ? "<span>" + CI.date(it.date) + "</span>" : "") +
         (it.size ? "<span>" + esc(it.size) + "</span>" : "") +
-        '<span class="stat" title="Скачиваний">⬇ <span data-count-dl="' + id + '">0</span></span>' +
-        '<button type="button" class="fav sm" data-fav="' + id + '" aria-pressed="false" aria-label="Избранное" title="В избранное"><span class="star">☆</span></button>' +
-        '<button type="button" class="like sm" data-like="' + id + '" aria-pressed="false" title="Нравится">' +
+        '<span class="stat" title="' + T("Скачиваний") + '">⬇ <span data-count-dl="' + id + '">0</span></span>' +
+        '<button type="button" class="fav sm" data-fav="' + id + '" aria-pressed="false" aria-label="' + T("Избранное") + '" title="' + T("В избранное") + '"><span class="star">☆</span></button>' +
+        '<button type="button" class="like sm" data-like="' + id + '" aria-pressed="false" title="' + T("Нравится") + '">' +
           '<span class="heart">❤</span><span class="stat" data-count-like="' + id + '">0</span></button>' +
       "</div></article>";
   }

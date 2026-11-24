@@ -1,7 +1,7 @@
 // Мессенджер внутри сайта: одна общая рамка (iframe) для плавающей панели и страницы #/messenger.
 // iframe создаётся при первом открытии и дальше не уничтожается — сессия и звонок не теряются.
 (function () {
-  var CI = window.CI;
+  var CI = window.CI, T = CI.t;
   var MOBILE = 760;
   var ALLOW = "camera; microphone; autoplay; clipboard-read; clipboard-write; display-capture; fullscreen";
   var ICON_CHAT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z"/></svg>';
@@ -12,21 +12,22 @@
   host.className = "msgr";
   host.id = "msgr";
   host.setAttribute("role", "dialog");
-  host.setAttribute("aria-label", "Мессенджер");
+  host.setAttribute("aria-label", T("Мессенджер"));
   host.setAttribute("aria-hidden", "true");
   host.innerHTML =
-    '<div class="msgr-bar"><b>Мессенджер</b><span class="sp"></span>' +
-    '<button type="button" class="msgr-btn" data-act="expand" title="Развернуть" aria-label="Развернуть">' + ICON_EXPAND + "</button>" +
-    '<button type="button" class="msgr-btn" data-act="close" title="Закрыть" aria-label="Закрыть">' + ICON_X + "</button></div>" +
+    '<div class="msgr-bar"><b data-i18n>Мессенджер</b><span class="sp"></span>' +
+    '<button type="button" class="msgr-btn" data-act="expand" title="Развернуть" aria-label="Развернуть" data-i18n-attr="title aria-label">' + ICON_EXPAND + "</button>" +
+    '<button type="button" class="msgr-btn" data-act="close" title="Закрыть" aria-label="Закрыть" data-i18n-attr="title aria-label">' + ICON_X + "</button></div>" +
     '<div class="msgr-body"></div>';
   document.body.appendChild(host);
+  CI.applyStatic(host);
   var body = host.querySelector(".msgr-body");
 
   var fab = document.createElement("button");
   fab.type = "button";
   fab.className = "fab";
   fab.id = "chat-fab";
-  fab.setAttribute("aria-label", "Открыть мессенджер");
+  fab.setAttribute("aria-label", T("Открыть мессенджер"));
   fab.setAttribute("aria-controls", "msgr");
   fab.setAttribute("aria-expanded", "false");
   fab.innerHTML = '<span class="fab-i chat">' + ICON_CHAT + '</span><span class="fab-i x">' + ICON_X + '</span><b class="nbadge" data-unread hidden></b>';
@@ -51,7 +52,7 @@
     host.setAttribute("aria-hidden", isOpen || isPage ? "false" : "true");
     fab.classList.toggle("is-open", isOpen && !isPage);
     fab.setAttribute("aria-expanded", isOpen && !isPage ? "true" : "false");
-    fab.setAttribute("aria-label", isOpen ? "Закрыть мессенджер" : "Открыть мессенджер");
+    fab.setAttribute("aria-label", isOpen ? T("Закрыть мессенджер") : T("Открыть мессенджер"));
     document.body.classList.toggle("msgr-open", isOpen && !isPage);
   }
 
@@ -84,12 +85,12 @@
       b.textContent = txt;
       b.hidden = !(n > 0);
     });
-    fab.setAttribute("title", n > 0 ? "Мессенджер — непрочитанных: " + n : "Мессенджер");
+    fab.setAttribute("title", n > 0 ? T("Мессенджер — непрочитанных: {n}", { n: n }) : T("Мессенджер"));
   }
   function showToast(text, ms) {
     if (visible()) return;
     lastNotifyAt = Date.now();
-    CI.toast(text, { action: "Открыть", onAction: open, timeout: ms || 6000 });
+    CI.toast(text, { action: T("Открыть"), onAction: open, timeout: ms || 6000 });
   }
 
   window.addEventListener("message", function (e) {
@@ -104,13 +105,15 @@
       setBadges(n);
       unreadFns.forEach(function (fn) { try { fn(n); } catch (er) {} });
       // в iframe «notify» приходит только при скрытой вкладке — поэтому показываем общий тост сами
-      if (grew) setTimeout(function () { if (Date.now() - lastNotifyAt > 1500) showToast("Новое сообщение в мессенджере"); }, 400);
+      if (grew) setTimeout(function () { if (Date.now() - lastNotifyAt > 1500) showToast(T("Новое сообщение в мессенджере")); }, 400);
     } else if (d.type === "notify") {
-      showToast("Новое сообщение от " + String(d.title || "собеседника").slice(0, 60));
+      showToast(d.title ? T("Новое сообщение от {who}", { who: String(d.title).slice(0, 60) }) : T("Новое сообщение от собеседника"));
     } else if (d.type === "call") {
-      showToast((d.title || "Входящий звонок") + (d.body ? ": " + String(d.body).slice(0, 60) : ""), 20000);
+      showToast((d.title || T("Входящий звонок")) + (d.body ? ": " + String(d.body).slice(0, 60) : ""), 20000);
     }
   });
+
+  CI.onLang(function () { sync(); setBadges(Math.max(0, lastCount)); });
 
   CI.msgr = {
     open: open,

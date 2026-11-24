@@ -13,7 +13,7 @@ import { compressAvatar } from '../messenger/js/image.js'; // то же сжат
 import { USERNAME_RE } from '../messenger/js/util.js';
 import { acc, emit, signedIn, errText } from './acc-core.js';
 
-const CI = window.CI;
+const CI = window.CI, T = CI.t, N = CI.N_;
 const ID_RE = /^[a-z0-9-]{1,40}$/;
 const uid = () => acc.user && acc.user.uid;
 const udRef = () => doc(db, 'userdata', uid());
@@ -23,7 +23,7 @@ const fail = (m) => { throw { userMessage: m }; };
 // ── вход и регистрация ──
 async function signIn(email, pass) {
   email = String(email || '').trim();
-  if (!email || !pass) fail('Введите email и пароль.');
+  if (!email || !pass) fail(N('Введите email и пароль.'));
   await signInWithEmailAndPassword(auth, email, pass);
 }
 
@@ -32,10 +32,10 @@ async function register({ name, username, email, password }) {
   name = String(name || '').trim();
   username = String(username || '').trim().replace(/^@/, '');
   email = String(email || '').trim();
-  if (!name) fail('Укажите имя для показа.');
-  if (!USERNAME_RE.test(username)) fail('Имя пользователя: 3–20 символов — латиница, цифры и _.');
-  if (!email) fail('Введите email.');
-  if (String(password || '').length < 6) fail('Пароль должен быть не короче 6 символов.');
+  if (!name) fail(N('Укажите имя для показа.'));
+  if (!USERNAME_RE.test(username)) fail(N('Имя пользователя: 3–20 символов — латиница, цифры и _.'));
+  if (!email) fail(N('Введите email.'));
+  if (String(password || '').length < 6) fail(N('Пароль должен быть не короче 6 символов.'));
   const cred = await createUserWithEmailAndPassword(auth, email, password);
   try {
     await claimProfile(cred.user.uid, name, username);
@@ -52,7 +52,7 @@ async function completeProfile(name, username) {
 
 const resetPassword = (email) => {
   email = String(email || '').trim();
-  if (!email) fail('Введите email.');
+  if (!email) fail(N('Введите email.'));
   return sendPasswordResetEmail(auth, email);
 };
 const logout = () => signOut(auth);
@@ -61,10 +61,10 @@ const logout = () => signOut(auth);
 async function toggleFav(id) {
   if (!signedIn() || !ID_RE.test(id)) return;
   const favs = acc.data.favorites || {}, on = !!favs[id];
-  if (!on && Object.keys(favs).length >= 200) { CI.toast('В избранном уже 200 программ — уберите лишние.'); return; }
+  if (!on && Object.keys(favs).length >= 200) { CI.toast(T('В избранном уже 200 программ — уберите лишние.')); return; }
   try {
     await setDoc(udRef(), { favorites: { [id]: on ? deleteField() : Date.now() } }, { merge: true });
-    CI.toast(on ? 'Убрано из избранного' : 'Добавлено в избранное', on ? {} : { action: 'Кабинет', onAction: () => { location.hash = '#/account'; } });
+    CI.toast(on ? T('Убрано из избранного') : T('Добавлено в избранное'), on ? {} : { action: T('Кабинет'), onAction: () => { location.hash = '#/account'; } });
   } catch (e) { CI.toast(errText(e)); }
 }
 
@@ -117,14 +117,14 @@ async function toggleLike(id) {
     acc.likes = { ...acc.likes };
     if (was) acc.likes[id] = true; else delete acc.likes[id];
     emit();
-    CI.toast('Лайк не сохранён: ' + errText(e));
+    CI.toast(T('Лайк не сохранён:') + ' ' + errText(e));
   } finally { likeBusy.delete(id); }
 }
 
 // ── профиль ──
 async function saveName(v) {
   v = String(v || '').trim();
-  if (!v) fail('Имя не может быть пустым.');
+  if (!v) fail(N('Имя не может быть пустым.'));
   await updateDoc(userRef(), { name: v.slice(0, 60) });
 }
 async function setAvatarFile(file) {
@@ -134,14 +134,14 @@ async function setAvatarFile(file) {
 const removeAvatar = () => updateDoc(userRef(), { avatar: null });
 
 async function reauth(pass) {
-  if (!pass) fail('Введите текущий пароль.');
+  if (!pass) fail(N('Введите текущий пароль.'));
   await reauthenticateWithCredential(acc.user, EmailAuthProvider.credential(acc.user.email, pass));
 }
 
 async function changePassword(cur, next, again) {
-  if (String(next || '').length < 6) fail('Новый пароль должен быть не короче 6 символов.');
-  if (next !== again) fail('Новые пароли не совпадают.');
-  if (next === cur) fail('Новый пароль совпадает с текущим.');
+  if (String(next || '').length < 6) fail(N('Новый пароль должен быть не короче 6 символов.'));
+  if (next !== again) fail(N('Новые пароли не совпадают.'));
+  if (next === cur) fail(N('Новый пароль совпадает с текущим.'));
   await reauth(cur);
   await updatePassword(acc.user, next);
 }

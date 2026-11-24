@@ -1,10 +1,14 @@
 // Шапка, подвал, тема, кнопка «Наверх», горячие клавиши.
 (function () {
-  var CI = window.CI, SITE = CI.SITE, root = document.documentElement;
+  var CI = window.CI, T = CI.t, SITE = CI.SITE, root = document.documentElement;
 
   // ── шапка/подвал ──
   document.getElementById("site-name").textContent = SITE.name || "";
-  document.getElementById("copy").textContent = "© " + new Date().getFullYear() + " " + (SITE.author || SITE.name || "") + " · Файлы бесплатны.";
+  function footCopy() {
+    document.getElementById("copy").textContent = "© " + new Date().getFullYear() + " " + (SITE.author || SITE.name || "") + " · " + T("Файлы бесплатны.");
+  }
+  footCopy();
+  CI.applyStatic();
   if (SITE.contact) {
     ["contact-link", "foot-contact"].forEach(function (id) {
       var a = document.getElementById(id);
@@ -50,14 +54,14 @@
     if (meta) meta.setAttribute("content", themeMetaColor(t));
     var btn = document.getElementById("theme-btn");
     var titles = {
-      dark: "Тёмная тема",
-      light: "Светлая тема",
-      indigo: "Тема Индиго",
-      purple: "Фиолетовая тема"
+      dark: T("Тёмная тема"),
+      light: T("Светлая тема"),
+      indigo: T("Тема Индиго"),
+      purple: T("Фиолетовая тема")
     };
     if (btn) {
-      btn.setAttribute("title", titles[t] || "Выбрать тему");
-      btn.setAttribute("aria-label", titles[t] || "Выбрать тему");
+      btn.setAttribute("title", titles[t] || T("Выбрать тему"));
+      btn.setAttribute("aria-label", titles[t] || T("Выбрать тему"));
     }
     var menu = document.getElementById("theme-menu");
     if (menu) {
@@ -109,8 +113,8 @@
   var up = document.createElement("button");
   up.type = "button";
   up.className = "to-top";
-  up.setAttribute("aria-label", "Наверх");
-  up.title = "Наверх";
+  up.setAttribute("aria-label", T("Наверх"));
+  up.title = T("Наверх");
   up.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
   up.onclick = function () { window.scrollTo({ top: 0, behavior: CI.reducedMotion() ? "auto" : "smooth" }); };
   document.body.appendChild(up);
@@ -120,6 +124,60 @@
     ticking = true;
     requestAnimationFrame(function () { ticking = false; up.classList.toggle("show", window.scrollY > 600); });
   }, { passive: true });
+
+  // ── язык: кнопка RU / UK / EN с меню (как у темы) ──
+  var langBtn = document.getElementById("lang-btn"), langMenu = document.getElementById("lang-menu");
+  function langPaint() {
+    var code = CI.lang.toUpperCase();
+    document.getElementById("lang-cur").textContent = code;
+    var lbl = T("Язык") + ": " + CI.LANG_NAMES[CI.lang];
+    langBtn.setAttribute("aria-label", lbl);
+    langBtn.title = lbl;
+    langMenu.querySelectorAll("[data-lang-val]").forEach(function (b) {
+      var on = b.getAttribute("data-lang-val") === CI.lang;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-checked", on ? "true" : "false");
+    });
+  }
+  function langOpen(v) {
+    langMenu.hidden = !v;
+    langBtn.setAttribute("aria-expanded", v ? "true" : "false");
+    if (v) { var a = langMenu.querySelector(".active") || langMenu.querySelector("button"); if (a) a.focus(); }
+  }
+  if (langBtn && langMenu) {
+    langPaint();
+    langBtn.onclick = function (e) {
+      e.stopPropagation();
+      if (themeMenu && !themeMenu.hidden) { themeMenu.hidden = true; themeBtn.setAttribute("aria-expanded", "false"); }
+      langOpen(langMenu.hidden);
+    };
+    langMenu.querySelectorAll("[data-lang-val]").forEach(function (b) {
+      b.onclick = function (e) {
+        e.stopPropagation();
+        langOpen(false);
+        langBtn.focus();
+        CI.setLang(b.getAttribute("data-lang-val"));
+      };
+    });
+    langMenu.addEventListener("keydown", function (e) {
+      var items = [].slice.call(langMenu.querySelectorAll("button")), i = items.indexOf(document.activeElement);
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        items[(i + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length].focus();
+      } else if (e.key === "Escape") { e.stopPropagation(); langOpen(false); langBtn.focus(); }
+    });
+    document.addEventListener("click", function (e) {
+      if (!langMenu.hidden && !langMenu.contains(e.target) && e.target !== langBtn) langOpen(false);
+    });
+    if (themeBtn) themeBtn.addEventListener("click", function () { langOpen(false); });
+  }
+  CI.onLang(function () {
+    footCopy();
+    apply(root.getAttribute("data-theme"));
+    up.setAttribute("aria-label", T("Наверх"));
+    up.title = T("Наверх");
+    if (langBtn) langPaint();
+  });
 
   // ── горячие клавиши: «/» — поиск, Esc — очистить поиск / закрыть панель ──
   function typing(el) {

@@ -3,8 +3,8 @@
 // (userdata/{uid} доступен только владельцу), а общего счётчика избранного нет.
 import { isAdmin } from './acc-core.js';
 
-const CI = window.CI, esc = CI.esc;
-const COLS = [['name', 'Программа'], ['type', 'Раздел'], ['downloads', 'Скачивания'], ['likes', 'Лайки']];
+const CI = window.CI, esc = CI.esc, T = CI.t, N = CI.N_;
+const COLS = [['name', N('Программа')], ['type', N('Раздел')], ['downloads', N('Скачивания')], ['likes', N('Лайки')]];
 const sort = { key: 'downloads', dir: -1 };
 
 export function adminHtml() {
@@ -13,23 +13,23 @@ export function adminHtml() {
   const k = sort.key, dir = sort.dir;
   rows.sort((a, b) => {
     const x = a[k], y = b[k];
-    const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'ru', { sensitivity: 'base' });
-    return c * dir || String(a.name).localeCompare(String(b.name), 'ru');
+    const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), CI.lang, { sensitivity: 'base' });
+    return c * dir || String(a.name).localeCompare(String(b.name), CI.lang);
   });
   const tot = rows.reduce((s, r) => ({ d: s.d + r.downloads, l: s.l + r.likes }), { d: 0, l: 0 });
   const th = COLS.map((c) => {
     const on = c[0] === k, aria = on ? (dir > 0 ? 'ascending' : 'descending') : 'none';
     return '<th scope="col" aria-sort="' + aria + '" class="' + (c[0] === 'downloads' || c[0] === 'likes' ? 'num' : '') + '">' +
-      '<button type="button" data-sort-col="' + c[0] + '">' + c[1] + '<span class="arr">' + (on ? (dir > 0 ? '▲' : '▼') : '') + '</span></button></th>';
+      '<button type="button" data-sort-col="' + c[0] + '">' + T(c[1]) + '<span class="arr">' + (on ? (dir > 0 ? '▲' : '▼') : '') + '</span></button></th>';
   }).join('');
   const body = rows.map((r) => '<tr><td><a href="#/item/' + encodeURIComponent(r.it.id) + '">' + esc(r.name) + '</a></td>' +
     '<td>' + esc(r.type) + '</td><td class="num">' + CI.num(r.downloads) + '</td><td class="num">' + CI.num(r.likes) + '</td></tr>').join('');
-  return '<div class="acc-card-head"><h2>Статистика <span class="acc-tag">админ</span></h2></div>' +
-    '<p class="acc-p muted">' + (CI.statsOk ? 'Всего: ' + CI.num(tot.d) + ' ' + CI.plural(tot.d, 'скачивание', 'скачивания', 'скачиваний') +
-      ', ' + CI.num(tot.l) + ' ' + CI.plural(tot.l, 'лайк', 'лайка', 'лайков') + '. ' : 'Счётчики загружаются… ') +
-    'Избранное по программам не считается — это личные данные пользователей. Нажмите на заголовок, чтобы отсортировать.</p>' +
+  return '<div class="acc-card-head"><h2>' + T('Статистика') + ' <span class="acc-tag">' + T('админ') + '</span></h2></div>' +
+    '<p class="acc-p muted">' + (CI.statsOk ? T('Всего:') + ' ' + CI.num(tot.d) + ' ' + CI.plural(tot.d, 'скачивание', 'скачивания', 'скачиваний') +
+      ', ' + CI.num(tot.l) + ' ' + CI.plural(tot.l, 'лайк', 'лайка', 'лайков') + '. ' : T('Счётчики загружаются…') + ' ') +
+    T('Избранное по программам не считается — это личные данные пользователей. Нажмите на заголовок, чтобы отсортировать.') + '</p>' +
     '<div class="acc-table-wrap"><table class="acc-table"><thead><tr>' + th + '</tr></thead><tbody>' + body +
-    '</tbody><tfoot><tr><td>Итого</td><td></td><td class="num">' + CI.num(tot.d) + '</td><td class="num">' + CI.num(tot.l) + '</td></tr></tfoot></table></div>';
+    '</tbody><tfoot><tr><td>' + T('Итого') + '</td><td></td><td class="num">' + CI.num(tot.d) + '</td><td class="num">' + CI.num(tot.l) + '</td></tr></tfoot></table></div>';
 }
 
 // Клик по заголовку — сортировка (повторный клик меняет направление)

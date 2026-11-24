@@ -1,5 +1,5 @@
-// Языки сайта: ru (по умолчанию, исходные тексты), uk, en.
-// Выбор: ?lang=xx в адресе → localStorage «ci-lang» → язык браузера (uk*/ru*, иначе en) → ru.
+// Языки сайта: ru (исходные тексты), uk, en. По умолчанию — en.
+// Выбор: ?lang=xx в адресе → localStorage «ci-lang» → en (английский по умолчанию).
 // Строки интерфейса: CI.t("Русский текст", {n: 5}) — ключ = русский текст (как msgid в gettext),
 // переводы — js/i18n-dict.js (uk и en). Тексты программ — items.uk.js / items.en.js (id → поля).
 // Для не-русского языка словарь и переводы подгружаются синхронно при первой загрузке (document.write
@@ -31,7 +31,7 @@
 
   var q = fromQuery();
   if (q) store(q); // ссылка с ?lang= — явный выбор
-  CI.lang = q || saved() || fromBrowser() || "ru";
+  CI.lang = q || saved() || "en";   // по умолчанию английский; свой выбор (кнопка RU/UK/EN или ?lang=) запоминается
   CI.locale = function () { return LOCALE[CI.lang] || "ru-RU"; };
 
   // ── перевод строк интерфейса ──
